@@ -1,114 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login / Sign Up</title>
+  <title>Login</title>
   <style>
-    * { box-sizing: border-box; margin:0; padding:0; font-family:sans-serif; }
-    body {
-      display:flex; align-items:center; justify-content:center;
-      height:100vh; background:#f0f4f8;
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-    .wrapper { perspective:1000px; }
-    .card-switch {
-      width:350px; height:460px; position:relative;
-    }
-    .switch { display:block; width:100%; height:100%; cursor:pointer; }
-    .toggle { display:none; }
-    .slider, .card-side { display:none; }
-    .flip-card__inner {
-      width:100%; height:100%;
-      transition: transform .6s; transform-style:preserve-3d;
-      position:relative;
-    }
-    .toggle:checked ~ .slider ~ .card-side ~ .flip-card__inner {
-      transform: rotateY(180deg);
-    }
-    .flip-card__front,
-    .flip-card__back {
-      position:absolute; width:100%; height:100%;
-      background:#fff; border-radius:12px;
-      box-shadow:0 8px 24px rgba(0,0,0,0.1);
-      backface-visibility:hidden;
-      padding:30px;
-    }
-    .flip-card__back { transform:rotateY(180deg); }
-    .title {
-      font-size:1.8rem; text-align:center;
-      color:#1e88e5; margin-bottom:20px;
-    }
-    .flip-card__form {
-      display:flex; flex-direction:column;
-    }
-    .flip-card__input {
-      padding:12px; margin-bottom:15px;
-      border:1px solid #ccc; border-radius:8px;
-      font-size:1rem;
-    }
-    .flip-card__btn {
-      padding:12px; background:#1e88e5;
-      color:#fff; border:none; border-radius:8px;
-      font-size:1rem; cursor:pointer;
-      transition:background .3s;
-    }
-    .flip-card__btn:hover { background:#1565c0; }
 
-    /* Added Remember me & Forgot */
-    .remember-forgot {
-      display:flex; justify-content:space-between;
-      align-items:center; font-size:.9rem;
-      margin-bottom:15px;
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #e3f2fd, #90caf9);
     }
-    .remember-forgot label {
-      display:flex; align-items:center;
-      font-size:.9rem;
+
+    .form {
+      background: white;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      max-width: 420px;
+      width: 90%;
     }
-    .remember-forgot input { margin-right:6px; }
-    .remember-forgot a {
-      color:#1e88e5; text-decoration:none;
+
+    .form h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
     }
-    .remember-forgot a:hover { text-decoration:underline; }
+
+    .inputForm {
+      display: flex;
+      align-items: center;
+      border: 1px solid #bbb;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background-color: #f3f3f3;
+      transition: 0.3s;
+    }
+
+    .inputForm input {
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .inputForm:focus-within {
+      border-color: #1e88e5;
+      background-color: #fff;
+    }
+
+    .flex-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .span {
+      color: #1e88e5;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+
+    .button-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1e88e5, #42a5f5);
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    .button-submit:hover {
+      background: linear-gradient(135deg, #1565c0, #2196f3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+
+    .alert {
+      padding: 10px;
+      background-color: #f44336;
+      color: white;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="card-switch">
-      <label class="switch">
-        <input type="checkbox" class="toggle">
-        <span class="slider"></span>
-        <span class="card-side"></span>
+  <form class="form" method="POST" action="/login">
+    <h2>Login</h2>
 
-        <div class="flip-card__inner">
-          <!-- LOGIN SIDE -->
-          <div class="flip-card__front">
-            <div class="title">Log in</div>
-            <form action="/login" method="POST" class="flip-card__form">
-              <input type="text" name="username" placeholder="Username" class="flip-card__input" required autofocus>
-              <input type="password" name="password" placeholder="Password" class="flip-card__input" required>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
 
-              <div class="remember-forgot">
-                <label><input type="checkbox" name="remember"> Remember me</label>
-                <a href="/forgot-password">Forgot password?</a>
-              </div>
-
-              <button type="submit" class="flip-card__btn">Let’s go!</button>
-            </form>
-          </div>
-
-          <!-- SIGN UP SIDE -->
-          <div class="flip-card__back">
-            <div class="title">Sign up</div>
-            <form action="/register" method="POST" class="flip-card__form">
-              <input type="text" name="name" placeholder="Name" class="flip-card__input" required>
-              <input type="text" name="username" placeholder="Username" class="flip-card__input" required>
-              <input type="password" name="password" placeholder="Password" class="flip-card__input" required>
-              <button type="submit" class="flip-card__btn">Confirm!</button>
-            </form>
-          </div>
-        </div>
-      </label>
+    <div class="inputForm">
+      <input type="text" name="username" placeholder="Username" required autofocus>
     </div>
-  </div>
+
+    <div class="inputForm">
+      <input type="password" name="password" placeholder="Password" required>
+    </div>
+
+    <div class="flex-row">
+      <div>
+        <input type="checkbox" id="remember" />
+        <label for="remember">Remember me</label>
+      </div>
+      <a href="/forgot-password" class="span">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="button-submit">Sign In</button>
+
+    <p style="text-align: center; font-size: 14px;">Don't have an account? <a href="/register" class="span">Sign Up</a></p>
+  </form>
 </body>
 </html>
