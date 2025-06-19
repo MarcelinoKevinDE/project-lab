@@ -9,14 +9,14 @@ function isLoggedIn(req, res, next) {
 
 // GET: Halaman Pengaturan
 router.get('/', isLoggedIn, (req, res) => {
-  // Kirim data dummy KA Lab (bisa diganti dari database)
+  // Data user KA Lab yang ditampilkan di halaman pengaturan
   const user = {
-    nama: 'ZA ZA',
-    email: 'za@example.com',
-    username: 'zalab',
-    lab: 'Lab Kimia Analitik',
+    nama: 'Marcelino Kevin',
+    email: 'kevinvionetta08@gmail.com',
+    username: 'admin@Kevin',
+    lab: 'Lab Ilmu Komputer',
     jumlahPengguna: 10,
-    versi: 'v1.2',
+    versi: 'vv1.2',
     terakhirUpdate: '15 Juni 2025'
   };
 
