@@ -2,136 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login</title>
+  <title>Login Flip</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
+    /* Background motif seperti awal */
     body {
       margin: 0;
       padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       height: 100vh;
-      background: linear-gradient(135deg, #e3f2fd, #90caf9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      --s: 82px;
+      --c1: #b2b2b2;
+      --c2: #ffffff;
+      --c3: #d9d9d9;
+      --_g: var(--c3) 0 120deg, #0000 0;
+      background:
+        conic-gradient(from -60deg at 50% calc(100% / 3), var(--_g)),
+        conic-gradient(from 120deg at 50% calc(200% / 3), var(--_g)),
+        conic-gradient(
+          from 60deg at calc(200% / 3),
+          var(--c3) 60deg,
+          var(--c2) 0 120deg,
+          #0000 0
+        ),
+        conic-gradient(from 180deg at calc(100% / 3), var(--c1) 60deg, var(--_g)),
+        linear-gradient(
+          90deg,
+          var(--c1) calc(100% / 6),
+          var(--c2) 0 50%,
+          var(--c1) 0 calc(500% / 6),
+          var(--c2) 0
+        );
+      background-size: calc(1.732 * var(--s)) var(--s);
+      font-family: 'Segoe UI', sans-serif;
     }
 
-    .form {
-      background: white;
-      padding: 35px;
-      border-radius: 18px;
+    .wrapper {
+      width: 350px;
+      perspective: 1000px;
+    }
+
+    .card-switch {
+      width: 100%;
+    }
+
+    .switch {
+      position: relative;
+      display: block;
+    }
+
+    .toggle {
+      display: none;
+    }
+
+    .slider, .card-side {
+      display: none;
+    }
+
+    .flip-card__inner {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s;
+    }
+
+    .toggle:checked ~ .flip-card__inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card__front,
+    .flip-card__back {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-      max-width: 420px;
-      width: 90%;
     }
 
-    .form h2 {
+    .flip-card__back {
+      transform: rotateY(180deg);
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       color: #333;
     }
 
-    .inputForm {
+    .flip-card__form {
       display: flex;
-      align-items: center;
-      border: 1px solid #bbb;
+      flex-direction: column;
+    }
+
+    .flip-card__input {
       padding: 12px;
-      border-radius: 10px;
       margin-bottom: 15px;
-      background-color: #f3f3f3;
-      transition: 0.3s;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      background-color: #f9f9f9;
     }
 
-    .inputForm input {
+    .flip-card__btn {
+      padding: 12px;
       border: none;
-      outline: none;
-      width: 100%;
-      background: transparent;
-      font-size: 16px;
-      color: #333;
-    }
-
-    .inputForm:focus-within {
-      border-color: #1e88e5;
-      background-color: #fff;
-    }
-
-    .flex-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      font-size: 14px;
-    }
-
-    .span {
-      color: #1e88e5;
-      cursor: pointer;
-      font-weight: 500;
-      text-decoration: underline;
-    }
-
-    .button-submit {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       background: linear-gradient(135deg, #1e88e5, #42a5f5);
       color: #fff;
-      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       transition: 0.3s ease-in-out;
     }
 
-    .button-submit:hover {
+    .flip-card__btn:hover {
       background: linear-gradient(135deg, #1565c0, #2196f3);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
     }
 
-    .alert {
-      padding: 10px;
-      background-color: #f44336;
-      color: white;
-      border-radius: 5px;
-      margin-bottom: 15px;
-      text-align: center;
+    .extras {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .extras label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .extras a {
+      color: #1e88e5;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 400px) {
+      .wrapper {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
-  <form class="form" method="POST" action="/login">
-    <h2>Login</h2>
+  <div class="wrapper">
+    <div class="card-switch">
+      <label class="switch">
+        <input class="toggle" type="checkbox" />
+        <div class="flip-card__inner">
+          <!-- LOGIN -->
+          <div class="flip-card__front">
+            <div class="title">Log In</div>
+            <form class="flip-card__form" method="POST" action="/login">
+              <input type="text" name="username" placeholder="Username" class="flip-card__input" required />
+              <input type="password" name="password" placeholder="Password" class="flip-card__input" required />
+              <div class="extras">
+                <label><input type="checkbox" name="remember" /> Remember me</label>
+                <a href="/forgot-password">Forgot password?</a>
+              </div>
+              <button type="submit" class="flip-card__btn">Let's go!</button>
+            </form>
+          </div>
 
-    <% if (typeof error !== 'undefined' && error) { %>
-      <div class="alert"><%= error %></div>
-    <% } %>
-
-    <div class="inputForm">
-      <input type="text" name="username" placeholder="Username" required autofocus>
+          <!-- REGISTER -->
+          <div class="flip-card__back">
+            <div class="title">Sign Up</div>
+            <form class="flip-card__form" method="POST" action="/register">
+              <input type="text" name="name" placeholder="Name" class="flip-card__input" required />
+              <input type="email" name="email" placeholder="Email" class="flip-card__input" required />
+              <input type="password" name="password" placeholder="Password" class="flip-card__input" required />
+              <button type="submit" class="flip-card__btn">Confirm!</button>
+            </form>
+          </div>
+        </div>
+      </label>
     </div>
-
-    <div class="inputForm">
-      <input type="password" name="password" placeholder="Password" required>
-    </div>
-
-    <div class="flex-row">
-      <div>
-        <input type="checkbox" id="remember" />
-        <label for="remember">Remember me</label>
-      </div>
-      <a href="/forgot-password" class="span">Forgot password?</a>
-    </div>
-
-    <button type="submit" class="button-submit">Sign In</button>
-
-    <p style="text-align: center; font-size: 14px;">Don't have an account? <a href="/register" class="span">Sign Up</a></p>
-  </form>
+  </div>
 </body>
 </html>
+
