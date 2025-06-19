@@ -19,7 +19,6 @@
       justify-content: center;
       height: 100vh;
 
-      /* BACKGROUND MOTIF */
       --s: 82px;
       --c1: #b2b2b2;
       --c2: #ffffff;
@@ -132,66 +131,6 @@
       margin: 5px 0;
     }
 
-    .p.line {
-      position: relative;
-      margin: 20px 0;
-    }
-
-    .p.line::before,
-    .p.line::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 40%;
-      height: 1px;
-      background-color: #ccc;
-    }
-
-    .p.line::before {
-      left: 0;
-    }
-
-    .p.line::after {
-      right: 0;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      padding: 10px;
-      margin: 5px;
-      border-radius: 8px;
-      border: none;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.3s;
-    }
-
-    .btn svg {
-      margin-right: 8px;
-    }
-
-    .google {
-      background-color: #fff;
-      border: 1px solid #ccc;
-    }
-
-    .google:hover {
-      background-color: #f0f0f0;
-    }
-
-    .apple {
-      background-color: #000;
-      color: #fff;
-    }
-
-    .apple:hover {
-      background-color: #222;
-    }
-
     .alert {
       padding: 10px;
       background-color: #f44336;
@@ -235,12 +174,6 @@
     <button type="submit" class="button-submit">Sign In</button>
 
     <p class="p">Don't have an account? <a href="/register" class="span">Sign Up</a></p>
-    <p class="p line">Or With</p>
-
-    <div class="flex-row">
-      <a href="/auth/google" class="btn google">Google</a>
-      <button type="button" class="btn apple">Apple</button>
-    </div>
   </form>
 </body>
 </html>
