@@ -11,8 +11,8 @@ function isLoggedIn(req, res, next) {
 // GET: Daftar barang
 router.get('/', isLoggedIn, async (req, res) => {
   try {
-    const barangs = await Barang.find(); // ✅ gunakan nama 'barangs'
-    res.render('barang/index', { barangs }); // ✅ kirim ke view dengan nama 'barangs'
+    const barangs = await Barang.find();
+    res.render('barang/index', { barangs });
   } catch (err) {
     console.error(err);
     res.status(500).send('Gagal mengambil data barang');
@@ -22,9 +22,9 @@ router.get('/', isLoggedIn, async (req, res) => {
 // GET: Form tambah barang
 router.get('/tambah', isLoggedIn, async (req, res) => {
   try {
-    const barangs = await Barang.find(); // Ambil semua barang
+    const barangs = await Barang.find();
     res.render('barang/tambah', {
-      barangs, // ✅ Kirim ke view
+      barangs,
       error: null,
       oldInput: {}
     });
@@ -34,15 +34,15 @@ router.get('/tambah', isLoggedIn, async (req, res) => {
   }
 });
 
-
 // POST: Tambah barang
 router.post('/tambah', isLoggedIn, async (req, res) => {
-  const { nama, jumlah } = req.body;
-  const oldInput = { nama, jumlah };
+  const { nama, jumlah, keterangan } = req.body;
+  const oldInput = { nama, jumlah, keterangan };
 
   if (!nama || !jumlah || isNaN(jumlah)) {
     return res.render('barang/tambah', {
       error: 'Nama dan jumlah valid wajib diisi',
+      barangs: [],
       oldInput
     });
   }
@@ -50,7 +50,8 @@ router.post('/tambah', isLoggedIn, async (req, res) => {
   try {
     const barang = new Barang({
       nama: nama.trim(),
-      jumlah: parseInt(jumlah)
+      jumlah: parseInt(jumlah),
+      keterangan: keterangan?.trim() || ''
     });
     await barang.save();
     res.redirect('/barang');
@@ -58,6 +59,7 @@ router.post('/tambah', isLoggedIn, async (req, res) => {
     console.error(err);
     res.render('barang/tambah', {
       error: 'Gagal menambah barang',
+      barangs: [],
       oldInput
     });
   }
@@ -77,17 +79,19 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 
 // POST: Edit barang
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
-  const { nama, jumlah } = req.body;
+  const { nama, jumlah, keterangan } = req.body;
+
   try {
     await Barang.findByIdAndUpdate(req.params.id, {
       nama: nama.trim(),
-      jumlah: parseInt(jumlah)
+      jumlah: parseInt(jumlah),
+      keterangan: keterangan?.trim() || ''
     });
     res.redirect('/barang');
   } catch (err) {
     console.error(err);
     res.render('barang/edit', {
-      barang: { _id: req.params.id, nama, jumlah },
+      barang: { _id: req.params.id, nama, jumlah, keterangan },
       error: 'Gagal mengedit barang'
     });
   }
