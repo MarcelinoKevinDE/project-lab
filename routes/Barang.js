@@ -20,9 +20,20 @@ router.get('/', isLoggedIn, async (req, res) => {
 });
 
 // GET: Form tambah barang
-router.get('/tambah', isLoggedIn, (req, res) => {
-  res.render('barang/tambah', { error: null, oldInput: {} });
+router.get('/tambah', isLoggedIn, async (req, res) => {
+  try {
+    const barangs = await Barang.find(); // Ambil semua barang
+    res.render('barang/tambah', {
+      barangs, // ✅ Kirim ke view
+      error: null,
+      oldInput: {}
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Gagal memuat form tambah barang');
+  }
 });
+
 
 // POST: Tambah barang
 router.post('/tambah', isLoggedIn, async (req, res) => {
