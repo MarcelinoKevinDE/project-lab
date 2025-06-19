@@ -4,7 +4,7 @@ const barangSchema = new mongoose.Schema({
   nama: { type: String, required: true },
   jumlah: { type: Number, required: true, min: 0 },
   keterangan: { type: String },
-  dieditOleh: { type: String }  // simpan siapa terakhir edit
+  
 }, { timestamps: true });
 
 module.exports = mongoose.model('Barang', barangSchema);
