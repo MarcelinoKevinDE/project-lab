@@ -47,6 +47,7 @@ function isLoggedIn(req, res, next) {
 const authRoutes = require('./routes/auth');
 const barangRoutes = require('./routes/Barang');
 const peminjamanRoutes = require('./routes/peminjaman');
+const pengaturanRouter = require('./routes/pengaturan'); // ✅ Tambahkan ini
 
 // Models
 const Barang = require('./models/Barang');
@@ -56,6 +57,7 @@ const Peminjaman = require('./models/peminjaman');
 app.use('/', authRoutes);
 app.use('/barang', isLoggedIn, barangRoutes);
 app.use('/peminjaman', isLoggedIn, peminjamanRoutes);
+app.use('/pengaturan', isLoggedIn, pengaturanRouter); // ✅ Gunakan route pengaturan
 
 // Halaman utama redirect ke login
 app.get('/', (req, res) => {
@@ -74,15 +76,12 @@ app.get('/dashboard', isLoggedIn, (req, res) => {
 app.get('/dashboard/search', isLoggedIn, async (req, res) => {
   const keyword = req.query.q || '';
   try {
-    // Barang cocok
     const barangResult = await Barang.find({
       nama: { $regex: keyword, $options: 'i' }
     });
 
-    // Semua data peminjaman (dengan barangDipinjam)
     const peminjamanAll = await Peminjaman.find().populate('barangDipinjam');
 
-    // Filter berdasarkan nama peminjam atau nama barang
     const peminjamResult = peminjamanAll.filter(p =>
       p.nama.toLowerCase().includes(keyword.toLowerCase()) ||
       (p.barangDipinjam && p.barangDipinjam.nama.toLowerCase().includes(keyword.toLowerCase()))
@@ -104,4 +103,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
 });
-
