@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+
+      /* BACKGROUND MOTIF */
+      --s: 82px;
+      --c1: #b2b2b2;
+      --c2: #ffffff;
+      --c3: #d9d9d9;
+      --_g: var(--c3) 0 120deg, #0000 0;
+      background:
+        conic-gradient(from -60deg at 50% calc(100% / 3), var(--_g)),
+        conic-gradient(from 120deg at 50% calc(200% / 3), var(--_g)),
+        conic-gradient(
+          from 60deg at calc(200% / 3),
+          var(--c3) 60deg,
+          var(--c2) 0 120deg,
+          #0000 0
+        ),
+        conic-gradient(from 180deg at calc(100% / 3), var(--c1) 60deg, var(--_g)),
+        linear-gradient(
+          90deg,
+          var(--c1) calc(100% / 6),
+          var(--c2) 0 50%,
+          var(--c1) 0 calc(500% / 6),
+          var(--c2) 0
+        );
+      background-size: calc(1.732 * var(--s)) var(--s);
+    }
+
+    .form {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      max-width: 420px;
+      width: 90%;
+      backdrop-filter: blur(8px);
+    }
+
+    .form h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .flex-column {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
+    }
+
+    .inputForm {
+      display: flex;
+      align-items: center;
+      border: 1px solid #bbb;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background-color: #f3f3f3;
+      transition: 0.3s;
+    }
+
+    .inputForm input {
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .inputForm:focus-within {
+      border-color: #1e88e5;
+      background-color: #fff;
+    }
+
+    .flex-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .span {
+      color: #1e88e5;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+
+    .button-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1e88e5, #42a5f5);
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    .button-submit:hover {
+      background: linear-gradient(135deg, #1565c0, #2196f3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+
+    .p {
+      text-align: center;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+
+    .p.line {
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .p.line::before,
+    .p.line::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background-color: #ccc;
+    }
+
+    .p.line::before {
+      left: 0;
+    }
+
+    .p.line::after {
+      right: 0;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .btn svg {
+      margin-right: 8px;
+    }
+
+    .google {
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+
+    .google:hover {
+      background-color: #f0f0f0;
+    }
+
+    .apple {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .apple:hover {
+      background-color: #222;
+    }
+
+    .alert {
+      padding: 10px;
+      background-color: #f44336;
+      color: white;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <form class="form" method="POST" action="/login">
+    <h2>Login</h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
+
+    <div class="flex-column">
+      <label for="username">Username</label>
+    </div>
+    <div class="inputForm">
+      <input type="text" name="username" placeholder="Enter your username" required autofocus>
+    </div>
+
+    <div class="flex-column">
+      <label for="password">Password</label>
+    </div>
+    <div class="inputForm">
+      <input type="password" name="password" placeholder="Enter your password" required>
+    </div>
+
+    <div class="flex-row">
+      <div>
+        <input type="checkbox" id="remember" />
+        <label for="remember">Remember me</label>
+      </div>
+      <a href="/forgot-password" class="span">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="button-submit">Sign In</button>
+
+    <p class="p">Don't have an account? <a href="/register" class="span">Sign Up</a></p>
+    <p class="p line">Or With</p>
+
+    <div class="flex-row">
+      <a href="/auth/google" class="btn google">Google</a>
+      <button type="button" class="btn apple">Apple</button>
+    </div>
+  </form>
+</body>
+</html>
