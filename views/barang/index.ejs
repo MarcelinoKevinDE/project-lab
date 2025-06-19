@@ -22,14 +22,13 @@
           <th scope="col">Nama</th>
           <th scope="col">Jumlah</th>
           <th scope="col">Keterangan</th>
-          <th scope="col">Diedit Oleh</th>
-          <th scope="col">Aksi</th>
+          <th scope="col">Aksi</th> <!-- ❌ "Diedit Oleh" dihapus -->
         </tr>
       </thead>
       <tbody>
         <% if (!barangs || barangs.length === 0) { %>
           <tr>
-            <td colspan="5" class="text-center fst-italic text-muted">Belum ada data barang</td>
+            <td colspan="4" class="text-center fst-italic text-muted">Belum ada data barang</td>
           </tr>
         <% } else { %>
           <% barangs.forEach(item => { %>
@@ -37,7 +36,6 @@
               <td><%= item.nama || '-' %></td>
               <td><%= (item.jumlah != null) ? item.jumlah : '-' %></td>
               <td><%= item.keterangan || '-' %></td>
-              <td><%= item.dieditOleh || '-' %></td>
               <td>
                 <a href="/barang/edit/<%= item._id %>" class="btn btn-warning btn-sm me-1" aria-label="Edit <%= item.nama %>">Edit</a>
 
