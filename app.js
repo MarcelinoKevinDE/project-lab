@@ -45,7 +45,7 @@ function isLoggedIn(req, res, next) {
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const barangRoutes = require('./routes/barang');
+const barangRoutes = require('./routes/Barang');
 const peminjamanRoutes = require('./routes/peminjaman');
 
 // Models
