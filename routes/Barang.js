@@ -69,8 +69,13 @@ router.post('/tambah', isLoggedIn, async (req, res) => {
 router.get('/edit/:id', isLoggedIn, async (req, res) => {
   try {
     const barang = await Barang.findById(req.params.id);
+    const barangs = await Barang.find(); // ✅ Tambahkan ini
     if (!barang) return res.redirect('/barang');
-    res.render('barang/edit', { barang, error: null });
+    res.render('barang/edit', {
+      barang,
+      barangs,
+      error: null
+    });
   } catch (err) {
     console.error(err);
     res.redirect('/barang');
@@ -92,6 +97,7 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
     console.error(err);
     res.render('barang/edit', {
       barang: { _id: req.params.id, nama, jumlah, keterangan },
+      barangs: [], // kirim kosong supaya aman
       error: 'Gagal mengedit barang'
     });
   }
