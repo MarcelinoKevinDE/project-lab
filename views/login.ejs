@@ -145,6 +145,21 @@
       text-decoration: underline;
       font-weight: 500;
     }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle button {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -159,7 +174,10 @@
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        <div class="password-toggle">
+          <input type="password" id="password" name="password" placeholder="Enter your password" required />
+          <button type="button" id="togglePassword">👁️</button>
+        </div>
       </div>
 
       <div class="options">
@@ -174,6 +192,17 @@
       </div>
     </form>
   </div>
+
+  <script>
+    const toggle = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    toggle.addEventListener('click', function () {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+  </script>
 
 </body>
 </html>
