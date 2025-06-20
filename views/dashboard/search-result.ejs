@@ -140,7 +140,7 @@
             <p>Meminjam: 
               <strong><%= pinjam.barangDipinjam ? pinjam.barangDipinjam.nama : 'Barang tidak ditemukan' %></strong>
             </p>
-            <p>Kontak: <%= pinjam.kontak || '-' %></p>
+            <p>NIM: <%= pinjam.nim || '-' %></p>
             <p>Tanggal Pinjam: <%= new Date(pinjam.tanggalPinjam).toLocaleDateString('id-ID') %></p>
             <p>Tanggal Kembali: 
               <%= pinjam.tanggalKembali ? new Date(pinjam.tanggalKembali).toLocaleDateString('id-ID') : '-' %>

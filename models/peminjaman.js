@@ -7,7 +7,7 @@ const peminjamanSchema = new Schema({
     required: true,
     trim: true
   },
-  kontak: {
+  nim: { // diganti dari kontak
     type: String,
     required: true,
     trim: true

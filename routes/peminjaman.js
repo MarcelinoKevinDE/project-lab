@@ -46,12 +46,12 @@ router.get('/tambah', isAdmin, async (req, res) => {
 
 // POST: Tambah peminjaman
 router.post('/tambah', isAdmin, async (req, res) => {
-  const { nama, kontak, tanggalPinjam, tanggalKembali, barangDipinjam } = req.body;
-  const oldInput = { nama, kontak, tanggalPinjam, tanggalKembali, barangDipinjam };
+  const { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam } = req.body;
+  const oldInput = { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam };
 
   try {
-    if (!nama || !kontak || !barangDipinjam) {
-      throw new Error('Nama, kontak, dan barang wajib diisi');
+    if (!nama || !nim || !barangDipinjam) {
+      throw new Error('Nama, NIM, dan barang wajib diisi');
     }
 
     const barang = await Barang.findById(barangDipinjam);
@@ -61,7 +61,7 @@ router.post('/tambah', isAdmin, async (req, res) => {
 
     const peminjaman = new Peminjaman({
       nama: nama.trim(),
-      kontak: kontak.trim(),
+      nim: nim.trim(),
       tanggalPinjam: tanggalPinjam ? new Date(tanggalPinjam) : new Date(),
       tanggalKembali: tanggalKembali ? new Date(tanggalKembali) : null,
       barangDipinjam,
@@ -97,13 +97,12 @@ router.get('/edit/:id', isAdmin, async (req, res) => {
 
 // POST: Update peminjaman
 router.post('/edit/:id', isAdmin, async (req, res) => {
-  const { nama, kontak, tanggalPinjam, tanggalKembali, barangDipinjam, status } = req.body;
+  const { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam, status } = req.body;
 
   try {
     const peminjaman = await Peminjaman.findById(req.params.id);
     if (!peminjaman) return res.redirect('/peminjaman');
 
-    // Jika barang berubah
     if (peminjaman.barangDipinjam.toString() !== barangDipinjam) {
       const barangLama = await Barang.findById(peminjaman.barangDipinjam);
       const barangBaru = await Barang.findById(barangDipinjam);
@@ -119,7 +118,6 @@ router.post('/edit/:id', isAdmin, async (req, res) => {
       await barangBaru?.save();
     }
 
-    // Jika status berubah
     if (peminjaman.status !== status) {
       const barang = await Barang.findById(barangDipinjam);
       if (barang) {
@@ -134,7 +132,7 @@ router.post('/edit/:id', isAdmin, async (req, res) => {
 
     await Peminjaman.findByIdAndUpdate(req.params.id, {
       nama: nama.trim(),
-      kontak: kontak.trim(),
+      nim: nim.trim(),
       tanggalPinjam: tanggalPinjam ? new Date(tanggalPinjam) : peminjaman.tanggalPinjam,
       tanggalKembali: tanggalKembali ? new Date(tanggalKembali) : peminjaman.tanggalKembali,
       barangDipinjam,
@@ -185,7 +183,6 @@ router.post('/hapus/:id', isAdmin, async (req, res) => {
     const peminjaman = await Peminjaman.findById(req.params.id);
     if (!peminjaman) return res.redirect('/peminjaman');
 
-    // Kembalikan stok jika belum dikembalikan
     if (peminjaman.status === 'dipinjam') {
       const barang = await Barang.findById(peminjaman.barangDipinjam);
       if (barang) {

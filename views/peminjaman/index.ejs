@@ -7,15 +7,10 @@
 </head>
 <body>
   <div class="container mt-4">
-
-    <!-- Tombol Kembali ke Dashboard -->
     <a href="/dashboard" class="btn btn-secondary mb-3">Kembali ke Dashboard</a>
-
     <h1 class="mb-4">Daftar Peminjaman</h1>
-
     <a href="/peminjaman/tambah" class="btn btn-primary mb-3">Tambah Peminjaman</a>
 
-    <!-- Filter Form -->
     <form method="GET" action="/peminjaman" class="row mb-3">
       <div class="col-md-3">
         <input type="text" name="nama" class="form-control" placeholder="Cari Nama" value="<%= query?.nama || '' %>">
@@ -35,12 +30,11 @@
       </div>
     </form>
 
-    <!-- Table Peminjaman -->
     <table class="table table-bordered table-striped">
       <thead class="table-dark">
         <tr>
           <th>Nama</th>
-          <th>Kontak</th>
+          <th>NIM</th>
           <th>Barang Dipinjam</th>
           <th>Tanggal Pinjam</th>
           <th>Tanggal Kembali</th>
@@ -52,23 +46,16 @@
         <% peminjaman.forEach(item => { %>
           <tr>
             <td><%= item.nama %></td>
-            <td><%= item.kontak %></td>
+            <td><%= item.nim %></td>
             <td><%= item.barangDipinjam ? item.barangDipinjam.nama : 'Barang tidak ditemukan' %></td>
             <td><%= item.tanggalPinjam ? item.tanggalPinjam.toLocaleDateString() : '-' %></td>
             <td><%= item.tanggalKembali ? item.tanggalKembali.toLocaleDateString() : '-' %></td>
+            <td><%= item.status === 'dikembalikan' ? 'Sudah Dikembalikan' : 'Dipinjam' %></td>
             <td>
-              <%= item.status === 'dikembalikan' ? 'Sudah Dikembalikan' : 'Dipinjam' %>
-            </td>
-            <td>
-              <!-- Tombol Edit -->
               <a href="/peminjaman/edit/<%= item._id %>" class="btn btn-warning btn-sm me-1">Edit</a>
-
-              <!-- Form Hapus -->
               <form action="/peminjaman/hapus/<%= item._id %>" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                 <button type="submit" class="btn btn-danger btn-sm me-1">Hapus</button>
               </form>
-
-              <!-- Form Kembalikan -->
               <% if (item.status !== 'dikembalikan') { %>
                 <form action="/peminjaman/kembalikan/<%= item._id %>" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin mengembalikan barang ini?');">
                   <button type="submit" class="btn btn-success btn-sm">Kembalikan</button>

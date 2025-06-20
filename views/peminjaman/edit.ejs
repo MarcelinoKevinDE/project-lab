@@ -6,75 +6,46 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-  <div class="container mt-5" style="max-width: 600px;">
+  <div class="container mt-5">
     <h2>Edit Peminjaman</h2>
+    <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
 
-    <% if (error) { %>
-      <div class="alert alert-danger"><%= error %></div>
-    <% } %>
-
-    <form action="/peminjaman/edit/<%= peminjaman._id %>" method="POST" novalidate>
+    <form action="/peminjaman/edit/<%= peminjaman._id %>" method="POST">
       <div class="mb-3">
-        <label for="nama" class="form-label">Nama Peminjam</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="nama" 
-          name="nama" 
-          value="<%= peminjaman.nama %>" 
-          required 
-        />
+        <label for="nama" class="form-label">Nama</label>
+        <input type="text" class="form-control <%= error && !peminjaman.nama ? 'is-invalid' : '' %>" id="nama" name="nama" value="<%= peminjaman.nama %>" required>
       </div>
 
       <div class="mb-3">
-        <label for="kontak" class="form-label">Kontak</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          id="kontak" 
-          name="kontak" 
-          value="<%= peminjaman.kontak %>" 
-          required 
-        />
+        <label for="nim" class="form-label">NIM</label>
+        <input type="text" class="form-control <%= error && !peminjaman.nim ? 'is-invalid' : '' %>" id="nim" name="nim" value="<%= peminjaman.nim %>" required>
       </div>
 
       <div class="mb-3">
-        <label for="barangDipinjam" class="form-label">Barang Dipinjam</label>
-        <select 
-          id="barangDipinjam" 
-          name="barangDipinjam" 
-          class="form-select" 
-          required
-        >
-          <% barangs.forEach(barang => { %>
-            <option 
-              value="<%= barang._id %>" 
-              <%= barang._id.toString() === peminjaman.barangDipinjam.toString() ? 'selected' : '' %>
-            ><%= barang.nama %></option>
+        <label for="barangDipinjam" class="form-label">Barang</label>
+        <select id="barangDipinjam" name="barangDipinjam" class="form-select" required>
+          <% barangs.forEach(b => { %>
+            <option value="<%= b._id %>" <%= peminjaman.barangDipinjam.toString() === b._id.toString() ? 'selected' : '' %>><%= b.nama %> (stok: <%= b.jumlah %>)</option>
           <% }) %>
         </select>
       </div>
 
       <div class="mb-3">
         <label for="tanggalPinjam" class="form-label">Tanggal Pinjam</label>
-        <input 
-          type="date" 
-          class="form-control" 
-          id="tanggalPinjam" 
-          name="tanggalPinjam" 
-          value="<%= peminjaman.tanggalPinjam ? peminjaman.tanggalPinjam.toISOString().split('T')[0] : '' %>"
-        />
+        <input type="date" id="tanggalPinjam" name="tanggalPinjam" class="form-control" value="<%= peminjaman.tanggalPinjam.toISOString().slice(0,10) %>">
       </div>
 
       <div class="mb-3">
         <label for="tanggalKembali" class="form-label">Tanggal Kembali</label>
-        <input 
-          type="date" 
-          class="form-control" 
-          id="tanggalKembali" 
-          name="tanggalKembali" 
-          value="<%= peminjaman.tanggalKembali ? peminjaman.tanggalKembali.toISOString().split('T')[0] : '' %>"
-        />
+        <input type="date" id="tanggalKembali" name="tanggalKembali" class="form-control" value="<%= peminjaman.tanggalKembali ? peminjaman.tanggalKembali.toISOString().slice(0,10) : '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select id="status" name="status" class="form-select">
+          <option value="dipinjam" <%= peminjaman.status === 'dipinjam' ? 'selected' : '' %>>Dipinjam</option>
+          <option value="dikembalikan" <%= peminjaman.status === 'dikembalikan' ? 'selected' : '' %>>Dikembalikan</option>
+        </select>
       </div>
 
       <button type="submit" class="btn btn-primary">Update</button>
