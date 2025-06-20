@@ -108,12 +108,35 @@
     const mainContent = document.getElementById('main-content');
     const navbar = document.getElementById('top-navbar');
 
-    sidebar.classList.toggle('collapsed');
-    mainContent.classList.toggle('collapsed');
-    navbar.style.paddingLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
+    if (window.innerWidth <= 767) {
+      // Mobile: toggle sidebar slide in/out
+      sidebar.classList.toggle('active');
+    } else {
+      // Desktop: toggle collapsed sidebar
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('collapsed');
+      navbar.style.paddingLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
+    }
   }
 
-  // Script untuk set width progress bar dari data-width agar bebas error CSS
+  // Reset classes on window resize to avoid conflicts
+  window.addEventListener('resize', () => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const navbar = document.getElementById('top-navbar');
+
+    if (window.innerWidth > 767) {
+      sidebar.classList.remove('active');
+      navbar.style.paddingLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
+      mainContent.classList.toggle('collapsed', sidebar.classList.contains('collapsed'));
+    } else {
+      sidebar.classList.remove('collapsed');
+      mainContent.classList.remove('collapsed');
+      navbar.style.paddingLeft = '0';
+    }
+  });
+
+  // Set progress bar width based on data-width attribute
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.progress-bar').forEach(bar => {
       const w = bar.getAttribute('data-width');
