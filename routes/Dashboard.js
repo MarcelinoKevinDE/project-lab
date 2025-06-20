@@ -3,49 +3,43 @@ const router = express.Router();
 const Barang = require('../models/Barang');
 const Peminjaman = require('../models/Peminjam');
 
-// Route pencarian dari dashboard
-router.get('/dashboard/search', async (req, res) => {
-  const q = req.query.q || '';
+// Route dashboard utama
+router.get('/dashboard', async (req, res) => {
   try {
-    // Cari semua barang sesuai keyword
-    const barangResult = await Barang.find({
-      nama: { $regex: q, $options: 'i' }
-    });
+    // Ambil semua barang
+    const barangList = await Barang.find({});
 
-    const barangIds = barangResult.map(b => b._id);
+    // Ambil semua peminjaman aktif
+    const peminjamanAktif = await Peminjaman.find({ status: 'dipinjam' });
 
-    // Ambil semua peminjaman AKTIF (status: dipinjam) untuk barang-barang tersebut
-    const peminjamResult = await Peminjaman.find({
-      barangDipinjam: { $in: barangIds }
-    }).populate('barangDipinjam');
-
-    // Hitung jumlah barang yang sedang dipinjam (status dipinjam saja)
+    // Hitung jumlah barang yang sedang dipinjam
     const jumlahDipinjamMap = {};
-    peminjamResult.forEach(p => {
-      if (p.status === 'dipinjam' && p.barangDipinjam?._id) {
-        const id = p.barangDipinjam._id.toString();
+    for (const p of peminjamanAktif) {
+      if (p.barangDipinjam) {
+        const id = p.barangDipinjam.toString();
         jumlahDipinjamMap[id] = (jumlahDipinjamMap[id] || 0) + 1;
       }
-    });
+    }
 
-    // Kurangi jumlah untuk ditampilkan di view
-    const barangResultAdjusted = barangResult.map(barang => {
-      const dipinjam = jumlahDipinjamMap[barang._id.toString()] || 0;
+    // Hitung barang tersedia
+    const adjustedBarang = barangList.map(b => {
+      const dipinjam = jumlahDipinjamMap[b._id.toString()] || 0;
       return {
-        ...barang.toObject(),
-        jumlah: Math.max(0, barang.jumlah - dipinjam)
+        ...b.toObject(),
+        tersedia: Math.max(0, b.jumlah - dipinjam)
       };
     });
 
-    res.render('dashboard/search-result', {
-      keyword: q,
-      barangResult: barangResultAdjusted,
-      peminjamResult
+    // Render ke dashboard (ubah sesuai lokasi file EJS-mu)
+    res.render('dashboard/index', {
+      username: req.session.username || 'User',
+      role: req.session.role || 'guest',
+      barangList: adjustedBarang
     });
 
   } catch (err) {
-    console.error('Error saat pencarian:', err);
-    res.status(500).send('Terjadi kesalahan saat pencarian.');
+    console.error('Gagal memuat dashboard:', err);
+    res.status(500).send('Gagal memuat dashboard');
   }
 });
 

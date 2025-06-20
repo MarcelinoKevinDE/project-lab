@@ -12,12 +12,7 @@
 
   <style>
     * { font-family: 'Poppins', sans-serif; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-
+    html, body { margin: 0; padding: 0; height: 100%; }
     body.container-bg {
       --s: 82px;
       --c1: #b2b2b2;
@@ -32,15 +27,11 @@
       background-size: calc(1.732 * var(--s)) var(--s);
     }
 
-    body {
-      padding-top: 80px;
-    }
+    body { padding-top: 80px; }
 
     nav#top-navbar {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      top: 0; left: 0; width: 100%;
       padding-left: 240px;
       background-color: white;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
@@ -54,8 +45,7 @@
       color: white;
       height: 100vh;
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       padding-top: 100px;
       transition: all 0.3s ease-in-out;
       z-index: 997;
@@ -65,7 +55,10 @@
     .sidebar h4 { text-align: center; margin-bottom: 40px; font-weight: bold; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li { padding: 15px 20px; }
-    .sidebar ul li a { color: white; text-decoration: none; display: flex; align-items: center; }
+    .sidebar ul li a {
+      color: white; text-decoration: none;
+      display: flex; align-items: center;
+    }
     .sidebar ul li a:hover { color: #f8f9fa; }
     .sidebar ul li i { margin-right: 10px; }
     .sidebar.collapsed .sidebar-label { display: none; }
@@ -75,21 +68,15 @@
       padding: 40px;
       transition: margin-left 0.3s ease-in-out;
     }
-
-    .sidebar.collapsed + .main-content {
-      margin-left: 70px;
-    }
+    .sidebar.collapsed + .main-content { margin-left: 70px; }
 
     .toggle-btn {
       position: fixed;
-      top: 90px;
-      left: 20px;
-      font-size: 1rem;
-      cursor: pointer;
+      top: 90px; left: 20px;
+      font-size: 1rem; cursor: pointer;
       color: #fff;
       background-color: #1f2937;
-      border: none;
-      border-radius: 6px;
+      border: none; border-radius: 6px;
       padding: 6px 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       z-index: 999;
@@ -150,8 +137,7 @@
     }
 
     .socialContainer {
-      width: 52px;
-      height: 52px;
+      width: 52px; height: 52px;
       background-color: rgb(44, 44, 44);
       display: flex;
       align-items: center;
@@ -164,7 +150,6 @@
 
     .containerOne:hover { background-color: #d62976; }
     .containerTwo:hover { background-color: #00acee; }
-    .containerThree:hover { background-color: #0072b1; }
     .containerFour:hover { background-color: #128C7E; }
 
     @media (max-width: 768px) {
@@ -180,10 +165,7 @@
 <nav id="top-navbar" class="navbar py-3 px-4 border-bottom">
   <div class="d-flex align-items-center gap-3">
     <img src="https://tse1.mm.bing.net/th?id=OIP.mPwOUdw3GDkhtzkVyqABGgHaHK&pid=Api&rs=1"
-         alt="Logo Unilak"
-         width="50"
-         height="50"
-         style="object-fit: contain;" />
+         alt="Logo Unilak" width="50" height="50" style="object-fit: contain;" />
     <div class="d-flex flex-column">
       <h5 class="mb-0 fw-bold text-dark">Fakultas Ilmu Komputer</h5>
       <small class="text-muted">Universitas Lancang Kuning</small>
@@ -233,6 +215,37 @@
         <i class="bi bi-whatsapp text-white"></i>
       </a>
     </div>
+
+    <% if (barangList && barangList.length > 0) { %>
+    <div class="w-100 mt-5">
+      <h4 class="text-dark text-center mb-4">Stok Barang Tersedia</h4>
+      <div class="row justify-content-center">
+        <% barangList.forEach(barang => {
+          const persentase = barang.jumlah > 0 ? Math.round((barang.tersedia / barang.jumlah) * 100) : 0;
+          let warna = 'bg-success';
+          if (persentase < 30) warna = 'bg-danger';
+          else if (persentase < 60) warna = 'bg-warning';
+        %>
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title"><i class="bi bi-box-seam"></i> <%= barang.nama %></h6>
+              <p class="text-muted mb-1">Tersedia: <strong><%= barang.tersedia %></strong> dari <%= barang.jumlah %></p>
+              <div class="progress">
+                <div class="progress-bar <%= warna %>" role="progressbar" style="width: <%= persentase %>%" aria-valuenow="<%= persentase %>" aria-valuemin="0" aria-valuemax="100">
+                  <%= persentase %>%
+                </div>
+              </div>
+              <% if (barang.keterangan) { %>
+                <small class="text-muted d-block mt-2"><%= barang.keterangan %></small>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
   </div>
 </div>
 
@@ -244,12 +257,7 @@
 
     sidebar.classList.toggle('collapsed');
     mainContent.classList.toggle('collapsed');
-
-    if (sidebar.classList.contains('collapsed')) {
-      navbar.style.paddingLeft = '70px';
-    } else {
-      navbar.style.paddingLeft = '240px';
-    }
+    navbar.style.paddingLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
   }
 </script>
 

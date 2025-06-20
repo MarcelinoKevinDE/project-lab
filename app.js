@@ -47,7 +47,7 @@ function isLoggedIn(req, res, next) {
 const authRoutes = require('./routes/auth');
 const barangRoutes = require('./routes/Barang');
 const peminjamanRoutes = require('./routes/peminjaman');
-const pengaturanRouter = require('./routes/pengaturan'); // ✅ Tambahkan ini
+const pengaturanRouter = require('./routes/pengaturan');
 
 // Models
 const Barang = require('./models/Barang');
@@ -57,19 +57,44 @@ const Peminjaman = require('./models/peminjaman');
 app.use('/', authRoutes);
 app.use('/barang', isLoggedIn, barangRoutes);
 app.use('/peminjaman', isLoggedIn, peminjamanRoutes);
-app.use('/pengaturan', isLoggedIn, pengaturanRouter); // ✅ Gunakan route pengaturan
+app.use('/pengaturan', isLoggedIn, pengaturanRouter);
 
 // Halaman utama redirect ke login
 app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-// Dashboard utama
-app.get('/dashboard', isLoggedIn, (req, res) => {
-  res.render('dashboard', {
-    username: req.user.username,
-    role: req.user.role,
-  });
+// ✅ Dashboard utama — Revisi agar barangList dikirim ke EJS
+app.get('/dashboard', isLoggedIn, async (req, res) => {
+  try {
+    const barangList = await Barang.find({});
+    const peminjamanAktif = await Peminjaman.find({ status: 'dipinjam' });
+
+    const jumlahDipinjamMap = {};
+    peminjamanAktif.forEach(p => {
+      if (p.barangDipinjam) {
+        const id = p.barangDipinjam.toString();
+        jumlahDipinjamMap[id] = (jumlahDipinjamMap[id] || 0) + 1;
+      }
+    });
+
+    const adjustedBarang = barangList.map(b => {
+      const dipinjam = jumlahDipinjamMap[b._id.toString()] || 0;
+      return {
+        ...b.toObject(),
+        tersedia: Math.max(0, b.jumlah - dipinjam)
+      };
+    });
+
+    res.render('dashboard', {
+      username: req.user.username,
+      role: req.user.role,
+      barangList: adjustedBarang
+    });
+  } catch (err) {
+    console.error('❌ Gagal memuat dashboard:', err);
+    res.status(500).send('Gagal memuat dashboard');
+  }
 });
 
 // Route pencarian
