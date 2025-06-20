@@ -1,135 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pengaturan KA Lab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Halaman Pengaturan</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f5;
       margin: 0;
       padding: 0;
     }
 
-    body {
-      background: linear-gradient(to right, #e0eafc, #cfdef3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
 
-    .card {
-      width: 400px;
-      padding: 2rem;
-      border-radius: 20px;
-      background: #ffffff;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
-    }
-
-    .card h2 {
-      margin-bottom: 1rem;
-      font-size: 24px;
+    h1 {
       text-align: center;
-      color: #333;
+      margin-bottom: 30px;
     }
 
-    .info-group {
-      margin-bottom: 1rem;
+    .item {
+      margin-bottom: 15px;
     }
 
-    .info-label {
+    .item label {
       font-weight: bold;
-      color: #555;
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
-    .info-value {
-      color: #222;
-      padding: 8px 12px;
-      border-radius: 8px;
-      background-color: #f6f6f6;
-      border: 1px solid #e0e0e0;
+    .item span {
+      display: block;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
     }
 
     .footer {
-      margin-top: 2rem;
+      margin-top: 40px;
       text-align: center;
-      font-size: 13px;
-      color: #888;
-    }
-
-    .back-btn {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 10px 16px;
-      background-color: #1e88e5;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    .back-btn:hover {
-      background-color: #1565c0;
+      font-size: 0.9em;
+      color: gray;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Pengaturan Sistem</h1>
 
-  <div class="card">
-    <h2>Pengaturan KA Lab</h2>
-
-    <div class="info-group">
-      <span class="info-label">Nama</span>
-      <div class="info-value"><%= user.nama %></div>
+    <div class="item">
+      <label>Nama:</label>
+      <span><%= user.nama %></span>
     </div>
 
-    <div class="info-group">
-      <span class="info-label">Email</span>
-      <div class="info-value"><%= user.email %></div>
+    <div class="item">
+      <label>Email:</label>
+      <span><%= user.email %></span>
     </div>
 
-    <div class="info-group">
-      <span class="info-label">Username</span>
-      <div class="info-value"><%= user.username %></div>
+    <div class="item">
+      <label>Username:</label>
+      <span><%= user.username %></span>
     </div>
 
-    <div class="info-group">
-      <span class="info-label">Laboratorium</span>
-      <div class="info-value"><%= user.lab %></div>
+    <div class="item">
+      <label>Laboratorium:</label>
+      <span><%= user.lab %></span>
     </div>
 
-    <div class="info-group">
-      <span class="info-label">Jumlah Pengguna</span>
-      <div class="info-value"><%= user.jumlahPengguna %> orang</div>
+    <div class="item">
+      <label>Jumlah Pengguna:</label>
+      <span><%= user.jumlahPengguna %></span>
     </div>
 
-    <div class="info-group">
-      <span class="info-label">Versi Aplikasi</span>
-      <div class="info-value"><%= user.versi %></div>
+    <div class="item">
+      <label>Versi Aplikasi:</label>
+      <span><%= user.versi %></span>
     </div>
 
-    <div class="info-group">
-      <span class="info-label">Terakhir Update</span>
-      <div class="info-value"><%= user.terakhirUpdate %></div>
+    <div class="item">
+      <label>Terakhir Diperbarui:</label>
+      <span><%= user.terakhirUpdate %></span>
     </div>
 
     <div class="footer">
-      <a href="/dashboard" class="back-btn">Kembali ke Dashboard</a>
+      Dibuat oleh <strong>Marcelino Kevin D.E 2025</strong>
     </div>
   </div>
-
 </body>
 </html>

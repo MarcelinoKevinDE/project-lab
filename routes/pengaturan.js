@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// Middleware untuk cek login (jika perlu)
+// Middleware untuk cek login (pakai passport)
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.redirect('/login');

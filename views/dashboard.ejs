@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
-
-  <!-- CSS Eksternal -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
@@ -13,130 +11,96 @@
 </head>
 <body class="container-bg">
 
-<nav id="top-navbar" class="navbar py-3 px-4 border-bottom">
-  <div class="d-flex align-items-center gap-3">
-    <img src="https://tse1.mm.bing.net/th?id=OIP.mPwOUdw3GDkhtzkVyqABGgHaHK&pid=Api&rs=1"
-         alt="Logo Unilak" width="50" height="50" style="object-fit: contain;" />
-    <div class="d-flex flex-column">
-      <h5 class="mb-0 fw-bold text-dark">Fakultas Ilmu Komputer</h5>
-      <small class="text-muted">Universitas Lancang Kuning</small>
+<!-- === TOP NAVBAR (Replaces Sidebar) === -->
+<nav id="top-navbar" class="navbar navbar-expand-lg py-3 px-4 border-bottom bg-white fixed-top">
+  <div class="container-fluid">
+    <div class="d-flex align-items-center gap-3">
+      <img src="https://tse1.mm.bing.net/th?id=OIP.mPwOUdw3GDkhtzkVyqABGgHaHK&pid=Api&rs=1" alt="Logo Unilak" width="50" height="50" style="object-fit: contain;" />
+      <div class="d-flex flex-column">
+        <h5 class="mb-0 fw-bold text-dark">Fakultas Ilmu Komputer</h5>
+        <small class="text-muted">Universitas Lancang Kuning</small>
+      </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navMenu">
+      <ul class="navbar-nav ms-auto d-flex align-items-lg-center gap-lg-3">
+        <li class="nav-item"><a href="/dashboard" class="nav-link"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+        <% if (role === 'admin') { %>
+          <li class="nav-item"><a href="/barang" class="nav-link"><i class="bi bi-box"></i> Barang</a></li>
+        <% } %>
+        <li class="nav-item"><a href="/peminjaman" class="nav-link"><i class="bi bi-clipboard-check"></i> Peminjaman</a></li>
+        <li class="nav-item"><a href="/pengaturan" class="nav-link"><i class="bi bi-gear"></i> Pengaturan</a></li>
+        <li class="nav-item"><a href="/logout" class="nav-link text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+      </ul>
     </div>
   </div>
 </nav>
 
-<div class="sidebar" id="sidebar">
-  <h4><i class="bi bi-diagram-3-fill"></i> <span class="sidebar-label">KA Lab</span></h4>
-  <ul>
-    <li><a href="/dashboard"><i class="bi bi-speedometer2"></i><span class="sidebar-label"> Dashboard</span></a></li>
-    <% if (role === 'admin') { %>
-      <li><a href="/barang"><i class="bi bi-box"></i><span class="sidebar-label"> Barang</span></a></li>
-    <% } %>
-    <li><a href="/peminjaman"><i class="bi bi-clipboard-check"></i><span class="sidebar-label"> Peminjaman</span></a></li>
-    <li><a href="/pengaturan"><i class="bi bi-gear"></i><span class="sidebar-label"> Pengaturan</span></a></li>
-    <li><a href="/logout"><i class="bi bi-box-arrow-right"></i><span class="sidebar-label"> Logout</span></a></li>
-  </ul>
-</div>
-
-<button class="toggle-btn" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
-
+<!-- === MAIN CONTENT === -->
 <div class="main-content" id="main-content">
   <div class="centered-content">
-    <div class="welcome-box">
-      <h2>Selamat datang, <%= username %>!</h2>
-      <p>Role kamu: <strong><%= role %></strong></p>
+
+    <!-- SELAMAT DATANG -->
+    <div class="card mb-4 p-4 border-0 rounded-4 w-100" style="background-color: rgba(0,0,0,0.6); color: #fff;">
+      <h4 class="fw-semibold mb-1">Selamat datang, <%= username %>!</h4>
+      <p class="mb-0">Role kamu: <strong><%= role %></strong></p>
     </div>
 
-    <div class="search-box">
+    <!-- SEARCH BAR -->
+    <div class="search-box mb-4">
       <form action="/dashboard/search" method="GET" class="input-group">
         <input type="text" name="q" class="form-control" placeholder="Cari barang atau peminjam..." required>
-        <button type="submit" class="btn btn-outline-dark"><i class="bi bi-search"></i></button>
+        <button type="submit" class="btn btn-outline-light bg-dark text-white"><i class="bi bi-search"></i></button>
       </form>
     </div>
 
-    <p class="promo-text">Falsilkom UNILAK Berkualitas! Terbukti Berkualitas</p>
-
-    <div class="social-card">
-      <a href="https://www.instagram.com/fasilkomunilak/" target="_blank" class="socialContainer containerOne" title="Instagram">
-        <i class="bi bi-instagram text-white"></i>
-      </a>
-      <a href="https://x.com/fasilkomunilak" target="_blank" class="socialContainer containerTwo" title="Twitter/X">
-        <i class="bi bi-twitter text-white"></i>
-      </a>
-      <a href="https://wa.me/628117532015" target="_blank" class="socialContainer containerFour" title="WhatsApp">
-        <i class="bi bi-whatsapp text-white"></i>
-      </a>
-    </div>
-
+    <!-- CARD BARANG -->
     <% if (barangList && barangList.length > 0) { %>
-    <div class="w-100 mt-5">
-      <h4 class="text-dark text-center mb-4">Stok Barang Tersedia</h4>
-      <div class="row justify-content-center">
+    <div class="card shadow-sm mt-4 p-4 border-0 rounded-4 w-100">
+      <h4 class="mb-3 text-dark text-center">Daftar Barang & Ketersediaan</h4>
+      <div class="card-grid">
         <% barangList.forEach(barang => {
           const persentase = barang.jumlah > 0 ? Math.round((barang.tersedia / barang.jumlah) * 100) : 0;
-          let warna = 'bg-success';
-          if (persentase < 30) warna = 'bg-danger';
-          else if (persentase < 60) warna = 'bg-warning';
+          let warna = 'progress-bar bg-success';
+          if (persentase < 30) warna = 'progress-bar bg-danger';
+          else if (persentase < 60) warna = 'progress-bar bg-warning';
         %>
-        <div class="col-md-6 mb-4">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h6 class="card-title"><i class="bi bi-box-seam"></i> <%= barang.nama %></h6>
-              <p class="text-muted mb-1">Tersedia: <strong><%= barang.tersedia %></strong> dari <%= barang.jumlah %></p>
-              <div class="progress">
-                <div class="progress-bar <%= warna %>" role="progressbar"
-                  aria-valuenow="<%= persentase %>" aria-valuemin="0" aria-valuemax="100"
-                  data-width="<%= persentase %>">
-                  <%= persentase %>%
-                </div>
-              </div>
-              <% if (barang.keterangan) { %>
-                <small class="text-muted d-block mt-2"><%= barang.keterangan %></small>
-              <% } %>
+        <div class="card shadow-sm h-100 p-3">
+          <div class="card-body p-0">
+            <h6 class="card-title mt-2"><%= barang.nama %></h6>
+            <p class="text-muted mb-1">Tersedia: <strong><%= barang.tersedia %></strong> dari <%= barang.jumlah %></p>
+            <div class="progress mb-2">
+              <div class="<%= warna %>" role="progressbar" aria-valuenow="<%= persentase %>" aria-valuemin="0" aria-valuemax="100" data-width="<%= persentase %>">
+                <%= persentase %>%</div>
             </div>
+            <% if (barang.keterangan) { %>
+              <small class="text-muted d-block"><%= barang.keterangan %></small>
+            <% } %>
           </div>
         </div>
         <% }); %>
       </div>
     </div>
     <% } %>
+
+    <!-- PROMO -->
+    <div class="card shadow-sm mt-5 p-4 border-0 rounded-4 w-100" style="background-color: rgba(0,0,0,0.6); color: #fff;">
+      <h4 class="mb-1">Falsilkom UNILAK Berkualitas!</h4>
+      <p class="mb-3">Terbukti Berkualitas</p>
+      <div class="d-flex justify-content-center gap-4">
+        <a href="https://www.instagram.com/fasilkomunilak/" target="_blank" title="Instagram" style="color: #fff; font-size: 1.4rem;"><i class="bi bi-instagram"></i></a>
+        <a href="https://x.com/fasilkomunilak" target="_blank" title="Twitter/X" style="color: #fff; font-size: 1.4rem;"><i class="bi bi-twitter"></i></a>
+        <a href="https://wa.me/628117532015" target="_blank" title="WhatsApp" style="color: #fff; font-size: 1.4rem;"><i class="bi bi-whatsapp"></i></a>
+      </div>
+    </div>
+
   </div>
 </div>
 
+<!-- SCRIPT: Progress bar auto width -->
 <script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-    const navbar = document.getElementById('top-navbar');
-
-    if (window.innerWidth <= 767) {
-      // Mobile: toggle sidebar slide in/out
-      sidebar.classList.toggle('active');
-    } else {
-      // Desktop: toggle collapsed sidebar
-      sidebar.classList.toggle('collapsed');
-      mainContent.classList.toggle('collapsed');
-      navbar.style.paddingLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
-    }
-  }
-
-  // Reset classes on window resize to avoid conflicts
-  window.addEventListener('resize', () => {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-    const navbar = document.getElementById('top-navbar');
-
-    if (window.innerWidth > 767) {
-      sidebar.classList.remove('active');
-      navbar.style.paddingLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
-      mainContent.classList.toggle('collapsed', sidebar.classList.contains('collapsed'));
-    } else {
-      sidebar.classList.remove('collapsed');
-      mainContent.classList.remove('collapsed');
-      navbar.style.paddingLeft = '0';
-    }
-  });
-
-  // Set progress bar width based on data-width attribute
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.progress-bar').forEach(bar => {
       const w = bar.getAttribute('data-width');
