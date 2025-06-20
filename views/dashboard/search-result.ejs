@@ -20,20 +20,9 @@
       --_g: var(--c3) 0 120deg, #0000 0;
       background: conic-gradient(from -60deg at 50% calc(100% / 3), var(--_g)),
         conic-gradient(from 120deg at 50% calc(200% / 3), var(--_g)),
-        conic-gradient(
-          from 60deg at calc(200% / 3),
-          var(--c3) 60deg,
-          var(--c2) 0 120deg,
-          #0000 0
-        ),
+        conic-gradient(from 60deg at calc(200% / 3), var(--c3) 60deg, var(--c2) 0 120deg, #0000 0),
         conic-gradient(from 180deg at calc(100% / 3), var(--c1) 60deg, var(--_g)),
-        linear-gradient(
-          90deg,
-          var(--c1) calc(100% / 6),
-          var(--c2) 0 50%,
-          var(--c1) 0 calc(500% / 6),
-          var(--c2) 0
-        );
+        linear-gradient(90deg, var(--c1) calc(100% / 6), var(--c2) 0 50%, var(--c1) 0 calc(500% / 6), var(--c2) 0);
       background-size: calc(1.732 * var(--s)) var(--s);
     }
 
@@ -95,20 +84,21 @@
       <% if (barangResult.length === 0) { %>
         <p class="text-muted fst-italic text-center">Tidak ada barang ditemukan.</p>
       <% } else { %>
-        <% barangResult.forEach(barang => { %>
+        <% barangResult.forEach(barang => { 
+            const peminjamBarangIni = peminjamResult.filter(p => 
+              p.barangDipinjam && p.barangDipinjam._id.toString() === barang._id.toString() && p.status === 'dipinjam'
+            );
+            const jumlahDipinjam = peminjamBarangIni.length;
+            const sisa = barang.jumlah - jumlahDipinjam;
+        %>
           <div class="glass-card">
             <h5><i class="bi bi-cube"></i> <%= barang.nama %></h5>
-            <p>Jumlah: <%= barang.jumlah %></p>
+            <p><strong>Jumlah Tersisa:</strong> <%= sisa < 0 ? 0 : sisa %> dari <%= barang.jumlah %></p>
             <p>Keterangan: <%= barang.keterangan || '-' %></p>
 
             <!-- Daftar peminjam barang ini -->
             <hr>
             <h6>Daftar Peminjam:</h6>
-            <% 
-              const peminjamBarangIni = peminjamResult.filter(p => 
-                p.barangDipinjam && p.barangDipinjam._id.toString() === barang._id.toString()
-              ); 
-            %>
             <% if (peminjamBarangIni.length === 0) { %>
               <p class="text-muted">Belum ada yang meminjam barang ini.</p>
             <% } else { %>

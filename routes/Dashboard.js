@@ -7,20 +7,19 @@ const Peminjaman = require('../models/Peminjam');
 router.get('/dashboard/search', async (req, res) => {
   const q = req.query.q || '';
   try {
-    // Cari barang berdasarkan nama yang mengandung keyword
+    // Cari semua barang sesuai keyword
     const barangResult = await Barang.find({
       nama: { $regex: q, $options: 'i' }
     });
 
-    // Ambil semua ID dari barang yang ditemukan
     const barangIds = barangResult.map(b => b._id);
 
-    // Ambil data peminjaman dengan status dipinjam terkait barang tersebut
+    // Ambil semua peminjaman AKTIF (status: dipinjam) untuk barang-barang tersebut
     const peminjamResult = await Peminjaman.find({
       barangDipinjam: { $in: barangIds }
     }).populate('barangDipinjam');
 
-    // Hitung jumlah barang yang sedang dipinjam berdasarkan ID
+    // Hitung jumlah barang yang sedang dipinjam (status dipinjam saja)
     const jumlahDipinjamMap = {};
     peminjamResult.forEach(p => {
       if (p.status === 'dipinjam' && p.barangDipinjam?._id) {
@@ -29,7 +28,7 @@ router.get('/dashboard/search', async (req, res) => {
       }
     });
 
-    // Kurangi jumlah barang sesuai jumlah yang sedang dipinjam
+    // Kurangi jumlah untuk ditampilkan di view
     const barangResultAdjusted = barangResult.map(barang => {
       const dipinjam = jumlahDipinjamMap[barang._id.toString()] || 0;
       return {
@@ -38,12 +37,12 @@ router.get('/dashboard/search', async (req, res) => {
       };
     });
 
-    // Kirim hasil pencarian ke view EJS
     res.render('dashboard/search-result', {
       keyword: q,
       barangResult: barangResultAdjusted,
       peminjamResult
     });
+
   } catch (err) {
     console.error('Error saat pencarian:', err);
     res.status(500).send('Terjadi kesalahan saat pencarian.');
