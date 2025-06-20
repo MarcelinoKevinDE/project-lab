@@ -44,41 +44,6 @@
       <button type="submit" class="btn btn-primary">Update</button>
       <a href="/barang" class="btn btn-secondary ms-2">Batal</a>
     </form>
-
-    <hr class="my-5">
-
-    <h4>Daftar Semua Barang</h4>
-    <table class="table table-bordered mt-3">
-      <thead class="table-light">
-        <tr>
-          <th>Nama</th>
-          <th>Jumlah</th>
-          <th>Keterangan</th>
-          <th>Terakhir Diubah Oleh</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (barangs && barangs.length > 0) { %>
-          <% barangs.forEach(barang => { %>
-            <tr>
-              <td><%= barang.nama %></td>
-              <td><%= barang.jumlah %></td>
-              <td><%= barang.keterangan %></td>
-              <td><%= barang.dieditOleh || '-' %></td>
-              <td>
-                <a href="/barang/edit/<%= barang._id %>" class="btn btn-warning btn-sm">Edit</a>
-                <a href="/barang/hapus/<%= barang._id %>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus barang ini?')">Hapus</a>
-              </td>
-            </tr>
-          <% }) %>
-        <% } else { %>
-          <tr>
-            <td colspan="5" class="text-center">Belum ada barang.</td>
-          </tr>
-        <% } %>
-      </tbody>
-    </table>
   </div>
 </body>
 </html>
