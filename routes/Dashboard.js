@@ -15,15 +15,33 @@ router.get('/dashboard/search', async (req, res) => {
     // Ambil semua ID dari barang yang ditemukan
     const barangIds = barangResult.map(b => b._id);
 
-    // Ambil data peminjaman yang terkait dengan barang yang ditemukan
+    // Ambil data peminjaman dengan status dipinjam terkait barang tersebut
     const peminjamResult = await Peminjaman.find({
       barangDipinjam: { $in: barangIds }
     }).populate('barangDipinjam');
 
+    // Hitung jumlah barang yang sedang dipinjam berdasarkan ID
+    const jumlahDipinjamMap = {};
+    peminjamResult.forEach(p => {
+      if (p.status === 'dipinjam' && p.barangDipinjam?._id) {
+        const id = p.barangDipinjam._id.toString();
+        jumlahDipinjamMap[id] = (jumlahDipinjamMap[id] || 0) + 1;
+      }
+    });
+
+    // Kurangi jumlah barang sesuai jumlah yang sedang dipinjam
+    const barangResultAdjusted = barangResult.map(barang => {
+      const dipinjam = jumlahDipinjamMap[barang._id.toString()] || 0;
+      return {
+        ...barang.toObject(),
+        jumlah: Math.max(0, barang.jumlah - dipinjam)
+      };
+    });
+
     // Kirim hasil pencarian ke view EJS
     res.render('dashboard/search-result', {
       keyword: q,
-      barangResult,
+      barangResult: barangResultAdjusted,
       peminjamResult
     });
   } catch (err) {
