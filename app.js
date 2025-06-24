@@ -48,6 +48,7 @@ const authRoutes = require('./routes/auth');
 const barangRoutes = require('./routes/Barang');
 const peminjamanRoutes = require('./routes/peminjaman');
 const pengaturanRouter = require('./routes/pengaturan');
+const forgotRoutes = require('./routes/forgot');
 
 // Models
 const Barang = require('./models/Barang');
@@ -55,6 +56,7 @@ const Peminjaman = require('./models/peminjaman');
 
 // Gunakan routes
 app.use('/', authRoutes);
+app.use('/', forgotRoutes);
 app.use('/barang', isLoggedIn, barangRoutes);
 app.use('/peminjaman', isLoggedIn, peminjamanRoutes);
 app.use('/pengaturan', isLoggedIn, pengaturanRouter);
@@ -64,7 +66,7 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-// ✅ Dashboard utama — Revisi agar barangList dikirim ke EJS
+// Dashboard utama
 app.get('/dashboard', isLoggedIn, async (req, res) => {
   try {
     const barangList = await Barang.find({});
@@ -86,10 +88,17 @@ app.get('/dashboard', isLoggedIn, async (req, res) => {
       };
     });
 
+    const totalBarang = barangList.length;
+    const totalTersedia = adjustedBarang.reduce((acc, b) => acc + b.tersedia, 0);
+    const totalPeminjaman = peminjamanAktif.length;
+
     res.render('dashboard', {
       username: req.user.username,
       role: req.user.role,
-      barangList: adjustedBarang
+      barangList: adjustedBarang,
+      totalBarang,
+      totalTersedia,
+      totalPeminjaman
     });
   } catch (err) {
     console.error('❌ Gagal memuat dashboard:', err);

@@ -9,19 +9,15 @@
       box-sizing: border-box;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
     }
-
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-
-      /* BACKGROUND MOTIF */
       --s: 82px;
       --c1: #b2b2b2;
       --c2: #ffffff;
@@ -30,23 +26,11 @@
       background:
         conic-gradient(from -60deg at 50% calc(100% / 3), var(--_g)),
         conic-gradient(from 120deg at 50% calc(200% / 3), var(--_g)),
-        conic-gradient(
-          from 60deg at calc(200% / 3),
-          var(--c3) 60deg,
-          var(--c2) 0 120deg,
-          #0000 0
-        ),
+        conic-gradient(from 60deg at calc(200% / 3), var(--c3) 60deg, var(--c2) 0 120deg, #0000 0),
         conic-gradient(from 180deg at calc(100% / 3), var(--c1) 60deg, var(--_g)),
-        linear-gradient(
-          90deg,
-          var(--c1) calc(100% / 6),
-          var(--c2) 0 50%,
-          var(--c1) 0 calc(500% / 6),
-          var(--c2) 0
-        );
+        linear-gradient(90deg, var(--c1) calc(100% / 6), var(--c2) 0 50%, var(--c1) 0 calc(500% / 6), var(--c2) 0);
       background-size: calc(1.732 * var(--s)) var(--s);
     }
-
     .card {
       width: 360px;
       padding: 2rem;
@@ -55,25 +39,21 @@
       backdrop-filter: blur(8px);
       box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
     }
-
     .card h2 {
       text-align: center;
       margin-bottom: 1.5rem;
       font-size: 26px;
       color: #333;
     }
-
     .form-group {
       margin-bottom: 1rem;
     }
-
     .form-group label {
       display: block;
       font-size: 14px;
       margin-bottom: 0.3rem;
       color: #555;
     }
-
     .form-group input {
       width: 100%;
       padding: 10px;
@@ -83,13 +63,11 @@
       background-color: #f9f9f9;
       transition: border 0.3s;
     }
-
     .form-group input:focus {
       border-color: #1e88e5;
       outline: none;
       background-color: #fff;
     }
-
     .options {
       display: flex;
       justify-content: space-between;
@@ -97,23 +75,19 @@
       font-size: 14px;
       margin-top: 0.5rem;
     }
-
     .options label {
       display: flex;
       align-items: center;
       gap: 5px;
     }
-
     .options a {
       color: #1e88e5;
       text-decoration: none;
       font-weight: 500;
     }
-
     .options a:hover {
       text-decoration: underline;
     }
-
     .btn {
       width: 100%;
       margin-top: 1.5rem;
@@ -127,29 +101,24 @@
       cursor: pointer;
       transition: 0.3s ease-in-out;
     }
-
     .btn:hover {
       background: linear-gradient(135deg, #1565c0, #2196f3);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
     }
-
     .signup {
       text-align: center;
       font-size: 14px;
       margin-top: 1.2rem;
     }
-
     .signup a {
       color: #1e88e5;
       text-decoration: underline;
       font-weight: 500;
     }
-
     .password-toggle {
       position: relative;
     }
-
     .password-toggle button {
       position: absolute;
       right: 10px;
@@ -160,12 +129,26 @@
       cursor: pointer;
       font-size: 18px;
     }
+    .alert {
+      background-color: #ffdddd;
+      color: #d8000c;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
     <h2>Sign In</h2>
+
+    <% if (typeof error !== 'undefined') { %>
+      <div class="alert"><%= error %></div>
+    <% } %>
+
     <form method="POST" action="/login">
       <div class="form-group">
         <label for="username">Username</label>
