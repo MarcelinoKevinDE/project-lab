@@ -16,7 +16,7 @@ router.post('/login', (req, res, next) => {
     if (!user) return res.render('login', { error: 'Username atau password salah.' });
     req.logIn(user, (err) => {
       if (err) return next(err);
-      return res.redirect('/dashboard');
+      return res.redirect('/home'); // Revisi: redirect ke halaman Home
     });
   })(req, res, next);
 });

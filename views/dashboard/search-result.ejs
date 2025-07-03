@@ -1,51 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hasil Pencarian</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+
   <style>
-    html, body {
-      height: 100%;
-      width: 100%;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f2f5;
       margin: 0;
       padding: 0;
-      --s: 82px;
-      --c1: #b2b2b2;
-      --c2: #ffffff;
-      --c3: #d9d9d9;
-
-      --_g: var(--c3) 0 120deg, #0000 0;
-      background: conic-gradient(from -60deg at 50% calc(100% / 3), var(--_g)),
-        conic-gradient(from 120deg at 50% calc(200% / 3), var(--_g)),
-        conic-gradient(from 60deg at calc(200% / 3), var(--c3) 60deg, var(--c2) 0 120deg, #0000 0),
-        conic-gradient(from 180deg at calc(100% / 3), var(--c1) 60deg, var(--_g)),
-        linear-gradient(90deg, var(--c1) calc(100% / 6), var(--c2) 0 50%, var(--c1) 0 calc(500% / 6), var(--c2) 0);
-      background-size: calc(1.732 * var(--s)) var(--s);
     }
 
-    .container-fluid {
-      padding-top: 50px;
-      padding-bottom: 80px;
+    .topbar {
+      background: #1d3557;
+      color: white;
+      height: 60px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
     }
 
-    .glass-card {
-      background: rgba(255, 255, 255, 0.85);
+    .topbar img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .topbar .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      padding: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card-custom {
+      background: #fff;
       border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       padding: 20px;
       margin-bottom: 20px;
     }
 
-    h3, h4 {
+    h3, h4, h5 {
       font-weight: bold;
-      text-align: center;
+      color: #1d3557;
     }
 
     .badge-warning {
       background-color: #ffc107;
+      color: #000;
     }
 
     .badge-success {
@@ -53,7 +73,7 @@
     }
 
     .btn-back {
-      background-color: #000;
+      background-color: #1d3557;
       color: #fff;
       border: none;
       padding: 10px 25px;
@@ -63,91 +83,99 @@
     }
 
     .btn-back:hover {
-      background-color: #333;
-    }
-
-    .title-icon {
-      margin-right: 8px;
+      background-color: #16324c;
     }
   </style>
 </head>
 <body>
 
-  <div class="container-fluid px-5">
-    <div class="text-center mb-4">
-      <h3><i class="bi bi-search title-icon"></i>Hasil Pencarian: "<%= keyword %>"</h3>
-    </div>
+<div class="topbar">
+  <div class="d-flex align-items-center">
+    <img src="https://faperta.unilak.ac.id/wp-content/uploads/2018/02/LOGO-UNILAK-BARU-1024x990.png" alt="Logo">
+    <div class="title">HASIL PENCARIAN</div>
+  </div>
+  <div>
+    <a href="/dashboard" class="btn btn-outline-light btn-sm"><i class="bi bi-arrow-left"></i> Dashboard</a>
+  </div>
+</div>
 
-    <!-- Hasil Barang -->
-    <div class="glass-card">
-      <h4><i class="bi bi-box title-icon"></i>Barang</h4>
-      <% if (barangResult.length === 0) { %>
-        <p class="text-muted fst-italic text-center">Tidak ada barang ditemukan.</p>
-      <% } else { %>
-        <% barangResult.forEach(barang => { 
-            const peminjamBarangIni = peminjamResult.filter(p => 
-              p.barangDipinjam && p.barangDipinjam._id.toString() === barang._id.toString() && p.status === 'dipinjam'
-            );
-            const jumlahDipinjam = peminjamBarangIni.length;
-            const sisa = barang.jumlah - jumlahDipinjam;
-        %>
-          <div class="glass-card">
-            <h5><i class="bi bi-cube"></i> <%= barang.nama %></h5>
-            <p><strong>Jumlah Tersisa:</strong> <%= sisa < 0 ? 0 : sisa %> dari <%= barang.jumlah %></p>
-            <p>Keterangan: <%= barang.keterangan || '-' %></p>
+<div class="main-content">
 
-            <!-- Daftar peminjam barang ini -->
-            <hr>
-            <h6>Daftar Peminjam:</h6>
-            <% if (peminjamBarangIni.length === 0) { %>
-              <p class="text-muted">Belum ada yang meminjam barang ini.</p>
-            <% } else { %>
-              <ul class="list-group">
-                <% peminjamBarangIni.forEach(p => { %>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-person"></i> <%= p.nama %></span>
-                    <span class="badge <%= p.status === 'dipinjam' ? 'badge-warning' : 'badge-success' %>">
-                      <%= p.status %>
-                    </span>
-                  </li>
-                <% }) %>
-              </ul>
-            <% } %>
-          </div>
-        <% }) %>
-      <% } %>
-    </div>
-
-    <!-- Hasil Semua Peminjaman -->
-    <div class="glass-card mt-4">
-      <h4><i class="bi bi-person-check title-icon"></i>Seluruh Data Peminjam Terkait</h4>
-      <% if (peminjamResult.length === 0) { %>
-        <p class="text-muted fst-italic text-center">Tidak ada data peminjam ditemukan.</p>
-      <% } else { %>
-        <% peminjamResult.forEach(pinjam => { %>
-          <div class="glass-card">
-            <h5><i class="bi bi-person"></i> <%= pinjam.nama %></h5>
-            <p>Meminjam: 
-              <strong><%= pinjam.barangDipinjam ? pinjam.barangDipinjam.nama : 'Barang tidak ditemukan' %></strong>
-            </p>
-            <p>NIM: <%= pinjam.nim || '-' %></p>
-            <p>Tanggal Pinjam: <%= new Date(pinjam.tanggalPinjam).toLocaleDateString('id-ID') %></p>
-            <p>Tanggal Kembali: 
-              <%= pinjam.tanggalKembali ? new Date(pinjam.tanggalKembali).toLocaleDateString('id-ID') : '-' %>
-            </p>
-            <span class="badge <%= pinjam.status === 'dipinjam' ? 'badge-warning' : 'badge-success' %>">
-              <%= pinjam.status %>
-            </span>
-          </div>
-        <% }) %>
-      <% } %>
-    </div>
-
-    <div class="text-center mt-4">
-      <a href="/dashboard" class="btn btn-back"><i class="bi bi-arrow-left"></i> Kembali ke Dashboard</a>
-    </div>
+  <div class="text-center mb-4">
+    <h3><i class="bi bi-search"></i> Hasil Pencarian: "<%= keyword %>"</h3>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Hasil Barang -->
+  <div class="card-custom">
+    <h4><i class="bi bi-box"></i> Barang</h4>
+    <% if (barangResult.length === 0) { %>
+      <p class="text-muted fst-italic text-center">Tidak ada barang ditemukan.</p>
+    <% } else { %>
+      <% barangResult.forEach(barang => { 
+          const peminjamBarangIni = peminjamResult.filter(p => 
+            p.barangDipinjam && p.barangDipinjam._id.toString() === barang._id.toString() && p.status === 'dipinjam'
+          );
+          const jumlahDipinjam = peminjamBarangIni.length;
+          const sisa = barang.jumlah - jumlahDipinjam;
+      %>
+        <div class="card-custom">
+          <h5><i class="bi bi-cube"></i> <%= barang.nama %></h5>
+          <p><strong>Jumlah Tersisa:</strong> <%= sisa < 0 ? 0 : sisa %> dari <%= barang.jumlah %></p>
+          <p>Keterangan: <%= barang.keterangan || '-' %></p>
+
+          <!-- Daftar peminjam barang ini -->
+          <hr>
+          <h6>Daftar Peminjam:</h6>
+          <% if (peminjamBarangIni.length === 0) { %>
+            <p class="text-muted">Belum ada yang meminjam barang ini.</p>
+          <% } else { %>
+            <ul class="list-group">
+              <% peminjamBarangIni.forEach(p => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-person"></i> <%= p.nama %></span>
+                  <span class="badge <%= p.status === 'dipinjam' ? 'badge-warning' : 'badge-success' %>">
+                    <%= p.status %>
+                  </span>
+                </li>
+              <% }) %>
+            </ul>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- Hasil Semua Peminjaman -->
+  <div class="card-custom mt-4">
+    <h4><i class="bi bi-person-check"></i> Seluruh Data Peminjam Terkait</h4>
+    <% if (peminjamResult.length === 0) { %>
+      <p class="text-muted fst-italic text-center">Tidak ada data peminjam ditemukan.</p>
+    <% } else { %>
+      <% peminjamResult.forEach(pinjam => { %>
+        <div class="card-custom">
+          <h5><i class="bi bi-person"></i> <%= pinjam.nama %></h5>
+          <p>Meminjam: 
+            <strong><%= pinjam.barangDipinjam ? pinjam.barangDipinjam.nama : 'Barang tidak ditemukan' %></strong>
+          </p>
+          <p>NIM: <%= pinjam.nim || '-' %></p>
+          <p>Tanggal Pinjam: <%= new Date(pinjam.tanggalPinjam).toLocaleDateString('id-ID') %></p>
+          <p>Tanggal Kembali: 
+            <%= pinjam.tanggalKembali ? new Date(pinjam.tanggalKembali).toLocaleDateString('id-ID') : '-' %>
+          </p>
+          <span class="badge <%= pinjam.status === 'dipinjam' ? 'badge-warning' : 'badge-success' %>">
+            <%= pinjam.status %>
+          </span>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/dashboard" class="btn btn-back"><i class="bi bi-arrow-left"></i> Kembali ke Dashboard</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,124 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Fasilkom SI46</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
     body {
+      background-color: #f0f2f5;
+      height: 100vh;
+      margin: 0;
       display: flex;
-      align-items: center;
       justify-content: center;
-      --s: 82px;
-      --c1: #b2b2b2;
-      --c2: #ffffff;
-      --c3: #d9d9d9;
-      --_g: var(--c3) 0 120deg, #0000 0;
-      background:
-        conic-gradient(from -60deg at 50% calc(100% / 3), var(--_g)),
-        conic-gradient(from 120deg at 50% calc(200% / 3), var(--_g)),
-        conic-gradient(from 60deg at calc(200% / 3), var(--c3) 60deg, var(--c2) 0 120deg, #0000 0),
-        conic-gradient(from 180deg at calc(100% / 3), var(--c1) 60deg, var(--_g)),
-        linear-gradient(90deg, var(--c1) calc(100% / 6), var(--c2) 0 50%, var(--c1) 0 calc(500% / 6), var(--c2) 0);
-      background-size: calc(1.732 * var(--s)) var(--s);
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
     }
-    .card {
-      width: 360px;
+
+    .card-login {
+      background: #fff;
       padding: 2rem;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    .card h2 {
+
+    h2 {
       text-align: center;
       margin-bottom: 1.5rem;
-      font-size: 26px;
-      color: #333;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    .form-group label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 0.3rem;
-      color: #555;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 10px;
-      font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-      transition: border 0.3s;
-    }
-    .form-group input:focus {
-      border-color: #1e88e5;
-      outline: none;
-      background-color: #fff;
-    }
-    .options {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      margin-top: 0.5rem;
-    }
-    .options label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .options a {
-      color: #1e88e5;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .options a:hover {
-      text-decoration: underline;
-    }
-    .btn {
-      width: 100%;
-      margin-top: 1.5rem;
-      padding: 12px;
-      font-size: 16px;
+      color: #1d3557;
       font-weight: bold;
-      color: white;
-      background: linear-gradient(135deg, #1e88e5, #42a5f5);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s ease-in-out;
     }
-    .btn:hover {
-      background: linear-gradient(135deg, #1565c0, #2196f3);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+
+    .form-control:focus {
+      border-color: #1d3557;
+      box-shadow: 0 0 0 0.2rem rgba(29, 53, 87, 0.25);
     }
-    .signup {
-      text-align: center;
-      font-size: 14px;
-      margin-top: 1.2rem;
-    }
-    .signup a {
-      color: #1e88e5;
-      text-decoration: underline;
-      font-weight: 500;
-    }
+
     .password-toggle {
       position: relative;
     }
+
     .password-toggle button {
       position: absolute;
       right: 10px;
@@ -126,66 +52,104 @@
       transform: translateY(-50%);
       background: none;
       border: none;
-      cursor: pointer;
       font-size: 18px;
+      color: #6c757d;
+      cursor: pointer;
     }
-    .alert {
-      background-color: #ffdddd;
-      color: #d8000c;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 15px;
+
+    .btn-primary {
+      background-color: #1d3557;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #163151;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-top: 0.5rem;
+    }
+
+    .options a {
+      color: #1d3557;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .options a:hover {
+      text-decoration: underline;
+    }
+
+    .signup {
       text-align: center;
+      margin-top: 1rem;
+      font-size: 14px;
+    }
+
+    .signup a {
+      color: #1d3557;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+
+    .alert-danger {
       font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>Sign In</h2>
+<div class="card-login">
+  <h2><i class="bi bi-person-circle"></i> Login</h2>
 
-    <% if (typeof error !== 'undefined') { %>
-      <div class="alert"><%= error %></div>
-    <% } %>
+  <% if (typeof error !== 'undefined') { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
 
-    <form method="POST" action="/login">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+  <form method="POST" action="/login">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan username" required>
+    </div>
+
+    <div class="mb-3 password-toggle">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password" required>
+      <button type="button" id="togglePassword"><i class="bi bi-eye"></i></button>
+    </div>
+
+    <div class="options mb-3">
+      <div>
+        <input type="checkbox" name="remember" id="remember">
+        <label for="remember">Ingat saya</label>
       </div>
+      <a href="/forgot-password">Lupa Password?</a>
+    </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="password-toggle">
-          <input type="password" id="password" name="password" placeholder="Enter your password" required />
-          <button type="button" id="togglePassword">👁️</button>
-        </div>
-      </div>
+    <button type="submit" class="btn btn-primary w-100">
+      <i class="bi bi-box-arrow-in-right"></i> Login
+    </button>
 
-      <div class="options">
-        <label><input type="checkbox" name="remember" /> Remember me</label>
-        <a href="/forgot-password">Forgot password?</a>
-      </div>
+    <div class="signup">
+      Belum punya akun? <a href="/register">Daftar</a>
+    </div>
+  </form>
+</div>
 
-      <button type="submit" class="btn">Login</button>
+<script>
+  const toggle = document.getElementById('togglePassword');
+  const password = document.getElementById('password');
 
-      <div class="signup">
-        Don't have an account? <a href="/register">Sign Up</a>
-      </div>
-    </form>
-  </div>
+  toggle.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+  });
+</script>
 
-  <script>
-    const toggle = document.getElementById('togglePassword');
-    const password = document.getElementById('password');
-
-    toggle.addEventListener('click', function () {
-      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-      password.setAttribute('type', type);
-      this.textContent = type === 'password' ? '👁️' : '🙈';
-    });
-  </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

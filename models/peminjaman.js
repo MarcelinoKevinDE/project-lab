@@ -7,7 +7,7 @@ const peminjamanSchema = new Schema({
     required: true,
     trim: true
   },
-  nim: { // diganti dari kontak
+  nim: { 
     type: String,
     required: true,
     trim: true
@@ -24,6 +24,11 @@ const peminjamanSchema = new Schema({
     ref: 'Barang',
     required: true
   },
+  jumlah: { 
+    type: Number,
+    required: true,
+    min: 1
+  },
   status: {
     type: String,
     enum: ['dipinjam', 'dikembalikan'],
@@ -31,4 +36,4 @@ const peminjamanSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Peminjaman', peminjamanSchema);
+module.exports = mongoose.model('Peminjaman', peminjamanSchema, 'peminjaman');

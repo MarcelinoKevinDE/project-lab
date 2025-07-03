@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home - Fasilkom SI46</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+
+    .topbar {
+      background: #1d3557;
+      color: white;
+      height: 60px;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .topbar .menu-toggle {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .topbar img {
+      height: 40px;
+      margin: 0 15px;
+    }
+
+    .topbar .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 60px;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background: #1d3557;
+      transition: .3s;
+      padding-top: 20px;
+      z-index: 999;
+    }
+
+    .sidebar.show {
+      left: 0;
+    }
+
+    .sidebar a {
+      color: white;
+      padding: 12px 20px;
+      display: block;
+      text-decoration: none;
+      border-bottom: 1px solid #ffffff22;
+    }
+
+    .sidebar a:hover {
+      background: #457b9d;
+    }
+
+    .main {
+      margin-top: 60px;
+      padding: 20px;
+      transition: margin-left .3s;
+    }
+
+    .main.shift {
+      margin-left: 250px;
+    }
+
+    .hero img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .section-card {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 8px;
+      max-width: 900px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: justify;
+    }
+
+    .section-card h2 {
+      margin-top: 0;
+      color: #1d3557;
+    }
+
+    .section-card ul {
+      padding-left: 20px;
+    }
+
+    .section-card ul li {
+      margin: 6px 0;
+    }
+
+    .footer {
+      background: #1d3557;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .footer-columns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .footer-column {
+      flex: 1 1 200px;
+      margin: 10px;
+    }
+
+    .footer-column h4 {
+      border-bottom: 1px solid #ffffff33;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-columns {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+  <img src="https://faperta.unilak.ac.id/wp-content/uploads/2018/02/LOGO-UNILAK-BARU-1024x990.png" alt="Logo Unilak">
+  <div class="title">Manajemen & Peminjaman Barang | Lab Fasilkom
+
+</div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <a href="/home">Home</a>
+  <a href="/dashboard">Dashboard</a>
+  <% if (role === 'admin') { %>
+    <a href="/barang">Barang</a>
+  <% } %>
+  <a href="/peminjaman">Peminjaman</a>
+  <a href="/pengaturan">Pengaturan</a>
+  <a href="/logout" class="text-danger">Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+  <div class="hero">
+    <img src="https://fasilkom.unilak.ac.id/asset/foto_banner/BANNER_WEB_FASILKOM_BARU_LARGE_SIZE-01.png" alt="Banner 1">
+  </div>
+  <div class="hero">
+    <img src="https://fasilkom.unilak.ac.id/asset/foto_banner/BANNER_WEB_FASILKOM_BARU_LARGE_SIZE-01-02.png" alt="Banner 2">
+  </div>
+
+  <div class="section-card">
+    <h2>FASILKOM Universitas Lancang Kuning</h2>
+    <p>Dalam tujuannya untuk mencetak lulusan yang kompeten dalam bidang Teknologi Informasi, Fakultas Ilmu Komputer dirancang berdasarkan Kurikulum Nasional, tanpa mengabaikan standar internasional.</p>
+    <ul>
+      <li>Dosen dan Staf Professional</li>
+      <li>Prestasi Akademik dan non Akademik</li>
+      <li>Kurikulum merujuk standar Nasional dan Internasional</li>
+      <li>Unit kemahasiswaan</li>
+      <li>Sarana prasarana pembelajaran</li>
+      <li>Atmosfer pembelajaran</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    <div class="footer-columns">
+      <div class="footer-column">
+        <h4>Kontak</h4>
+        <p>Universitas Lancang Kuning<br>
+        Jl. Yos Sudarso No.KM.8, Umban Sari, Rumbai, Pekanbaru, Riau 28266<br>
+        Telp/WhatsApp: 0811-7532-015<br>
+        Email: fasilkom@unilak.ac.id</p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Program Studi</h4>
+        <p>- Teknik Informatika<br>
+        - Sistem Informasi<br>
+        - Bisnis Digital</p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Laboratorium</h4>
+        <p>- Pemograman Teknik Informatika / Sistem Informasi / Bisnis Digital<br>
+        - Jaringan<br>
+        - Multimedia</p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Mahasiswa</h4>
+        <p>- BEM, DPM<br>
+        - HIMATIKA, HIMASI, HIMABISDI<br>
+        - Duck Studi Club</p>
+      </div>
+    </div>
+    <p>© 2025. All Rights Reserved. Design by Marcelino Kevin D.E Mahasiswa Fakultas Ilmu Komputer Universitas Lancang Kuning</p>
+  </div>
+
+</div>
+
+<script>
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("show");
+  document.getElementById("main").classList.toggle("shift");
+}
+</script>
+
+</body>
+</html>

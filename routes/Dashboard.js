@@ -1,44 +1,57 @@
 const express = require('express');
 const router = express.Router();
 const Barang = require('../models/Barang');
-const Peminjaman = require('../models/Peminjam');
+const Peminjaman = require('../models/peminjaman');
 
-// Route dashboard utama
-router.get('/dashboard', async (req, res) => {
+// Middleware Autentikasi
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+}
+
+// Route Dashboard
+router.get('/dashboard', isAuthenticated, async (req, res) => {
   try {
-    // Ambil semua barang
     const barangList = await Barang.find({});
+    const peminjamanAktif = await Peminjaman.find({ status: 'dipinjam' }).populate('barangDipinjam');
 
-    // Ambil semua peminjaman aktif
-    const peminjamanAktif = await Peminjaman.find({ status: 'dipinjam' });
-
-    // Hitung jumlah barang yang sedang dipinjam
+    // Hitung jumlah barang dipinjam per barang
     const jumlahDipinjamMap = {};
-    for (const p of peminjamanAktif) {
-      if (p.barangDipinjam) {
-        const id = p.barangDipinjam.toString();
-        jumlahDipinjamMap[id] = (jumlahDipinjamMap[id] || 0) + 1;
+    peminjamanAktif.forEach(p => {
+      if (p.barangDipinjam && p.barangDipinjam._id) {
+        const id = p.barangDipinjam._id.toString();
+        jumlahDipinjamMap[id] = (jumlahDipinjamMap[id] || 0) + (p.jumlah || 0);
       }
-    }
+    });
 
-    // Hitung barang tersedia
-    const adjustedBarang = barangList.map(b => {
-      const dipinjam = jumlahDipinjamMap[b._id.toString()] || 0;
+    // Persiapan data barang untuk tampilan
+    const barangListWithStats = barangList.map(barang => {
+      const dipinjam = jumlahDipinjamMap[barang._id.toString()] || 0;
+      const tersedia = Math.max(0, barang.jumlah - dipinjam);
+      const persentase = barang.jumlah > 0 ? Math.round((tersedia / barang.jumlah) * 100) : 0;
+
       return {
-        ...b.toObject(),
-        tersedia: Math.max(0, b.jumlah - dipinjam)
+        ...barang.toObject(),
+        tersedia,
+        dipinjam,
+        persentase
       };
     });
 
-    // Render ke dashboard (ubah sesuai lokasi file EJS-mu)
-    res.render('dashboard/index', {
-      username: req.session.username || 'User',
-      role: req.session.role || 'guest',
-      barangList: adjustedBarang
+    // Kirim data ke tampilan dashboard.ejs
+    res.render('dashboard', {
+      username: req.user ? req.user.username : 'User',
+      role: req.user ? req.user.role : 'guest',
+      barangList: barangListWithStats,
+      totalBarang: barangList.length,
+      totalTersedia: barangListWithStats.reduce((sum, barang) => sum + barang.tersedia, 0),
+      totalPeminjaman: peminjamanAktif.length
     });
 
   } catch (err) {
-    console.error('Gagal memuat dashboard:', err);
+    console.error('❌ Gagal memuat dashboard:', err.message);
     res.status(500).send('Gagal memuat dashboard');
   }
 });

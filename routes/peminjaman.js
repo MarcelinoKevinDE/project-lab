@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const Peminjaman = require('../models/peminjaman');
 const Barang = require('../models/Barang');
 
@@ -10,7 +11,7 @@ function isAdmin(req, res, next) {
   next();
 }
 
-// GET: Daftar semua peminjaman dengan filter
+// GET: Daftar semua peminjaman
 router.get('/', isAdmin, async (req, res) => {
   try {
     const { nama, status, tanggalPinjam } = req.query;
@@ -33,7 +34,7 @@ router.get('/', isAdmin, async (req, res) => {
   }
 });
 
-// GET: Form tambah
+// GET: Form tambah peminjaman
 router.get('/tambah', isAdmin, async (req, res) => {
   try {
     const barangs = await Barang.find();
@@ -44,7 +45,7 @@ router.get('/tambah', isAdmin, async (req, res) => {
   }
 });
 
-// POST: Tambah peminjaman
+// POST: Tambah peminjaman (default 1 item, stok real-time)
 router.post('/tambah', isAdmin, async (req, res) => {
   const { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam } = req.body;
   const oldInput = { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam };
@@ -55,24 +56,32 @@ router.post('/tambah', isAdmin, async (req, res) => {
     }
 
     const barang = await Barang.findById(barangDipinjam);
-    if (!barang || barang.jumlah <= 0) {
-      throw new Error('Barang tidak tersedia atau stok habis');
+    if (!barang) throw new Error('Barang tidak ditemukan');
+
+    // Hitung total yang sedang dipinjam
+    const dipinjamData = await Peminjaman.aggregate([
+      { $match: { barangDipinjam: barang._id, status: 'dipinjam' } },
+      { $group: { _id: null, totalDipinjam: { $sum: "$jumlah" } } }
+    ]);
+    const totalDipinjam = dipinjamData[0]?.totalDipinjam || 0;
+    const stokTersedia = barang.jumlah - totalDipinjam;
+
+    if (stokTersedia < 1) {
+      throw new Error(`Stok tidak mencukupi. Sisa tersedia: ${stokTersedia}`);
     }
 
+    // Simpan peminjaman
     const peminjaman = new Peminjaman({
       nama: nama.trim(),
       nim: nim.trim(),
       tanggalPinjam: tanggalPinjam ? new Date(tanggalPinjam) : new Date(),
       tanggalKembali: tanggalKembali ? new Date(tanggalKembali) : null,
       barangDipinjam,
+      jumlah: 1,
       status: 'dipinjam'
     });
 
     await peminjaman.save();
-
-    barang.jumlah -= 1;
-    await barang.save();
-
     res.redirect('/peminjaman');
   } catch (err) {
     console.error(err);
@@ -81,7 +90,7 @@ router.post('/tambah', isAdmin, async (req, res) => {
   }
 });
 
-// GET: Form edit
+// GET: Form edit peminjaman
 router.get('/edit/:id', isAdmin, async (req, res) => {
   try {
     const peminjaman = await Peminjaman.findById(req.params.id);
@@ -95,84 +104,23 @@ router.get('/edit/:id', isAdmin, async (req, res) => {
   }
 });
 
-// POST: Update peminjaman
-router.post('/edit/:id', isAdmin, async (req, res) => {
-  const { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam, status } = req.body;
-
-  try {
-    const peminjaman = await Peminjaman.findById(req.params.id);
-    if (!peminjaman) return res.redirect('/peminjaman');
-
-    if (peminjaman.barangDipinjam.toString() !== barangDipinjam) {
-      const barangLama = await Barang.findById(peminjaman.barangDipinjam);
-      const barangBaru = await Barang.findById(barangDipinjam);
-
-      if (barangLama) barangLama.jumlah += 1;
-      if (barangBaru && barangBaru.jumlah > 0) {
-        barangBaru.jumlah -= 1;
-      } else {
-        throw new Error('Barang pengganti tidak tersedia');
-      }
-
-      await barangLama?.save();
-      await barangBaru?.save();
-    }
-
-    if (peminjaman.status !== status) {
-      const barang = await Barang.findById(barangDipinjam);
-      if (barang) {
-        if (status === 'dikembalikan' && peminjaman.status === 'dipinjam') {
-          barang.jumlah += 1;
-        } else if (status === 'dipinjam' && peminjaman.status === 'dikembalikan' && barang.jumlah > 0) {
-          barang.jumlah -= 1;
-        }
-        await barang.save();
-      }
-    }
-
-    await Peminjaman.findByIdAndUpdate(req.params.id, {
-      nama: nama.trim(),
-      nim: nim.trim(),
-      tanggalPinjam: tanggalPinjam ? new Date(tanggalPinjam) : peminjaman.tanggalPinjam,
-      tanggalKembali: tanggalKembali ? new Date(tanggalKembali) : peminjaman.tanggalKembali,
-      barangDipinjam,
-      status
-    });
-
-    res.redirect('/peminjaman');
-  } catch (err) {
-    console.error(err);
-    const barangs = await Barang.find();
-    res.render('peminjaman/edit', {
-      peminjaman: req.body,
-      barangs,
-      error: err.message,
-      oldInput: req.body
-    });
-  }
-});
-
 // POST: Kembalikan barang
 router.post('/kembalikan/:id', isAdmin, async (req, res) => {
   try {
-    const peminjaman = await Peminjaman.findByIdAndUpdate(
-      req.params.id,
-      {
-        status: 'dikembalikan',
-        tanggalKembali: new Date()
-      },
-      { new: true }
-    );
+    const peminjaman = await Peminjaman.findById(req.params.id);
+    if (!peminjaman) return res.status(404).send('Data tidak ditemukan');
 
-    const barang = await Barang.findById(peminjaman.barangDipinjam);
-    if (barang) {
-      barang.jumlah += 1;
-      await barang.save();
+    if (peminjaman.status === 'dikembalikan') {
+      return res.redirect('/peminjaman');
     }
+
+    peminjaman.status = 'dikembalikan';
+    peminjaman.tanggalKembali = new Date();
+    await peminjaman.save();
 
     res.redirect('/peminjaman');
   } catch (err) {
-    console.error(err);
+    console.error('Gagal mengembalikan barang:', err);
     res.status(500).send('Gagal mengembalikan barang');
   }
 });
@@ -181,21 +129,13 @@ router.post('/kembalikan/:id', isAdmin, async (req, res) => {
 router.post('/hapus/:id', isAdmin, async (req, res) => {
   try {
     const peminjaman = await Peminjaman.findById(req.params.id);
-    if (!peminjaman) return res.redirect('/peminjaman');
-
-    if (peminjaman.status === 'dipinjam') {
-      const barang = await Barang.findById(peminjaman.barangDipinjam);
-      if (barang) {
-        barang.jumlah += 1;
-        await barang.save();
-      }
-    }
+    if (!peminjaman) return res.status(404).send('Data tidak ditemukan');
 
     await Peminjaman.findByIdAndDelete(req.params.id);
     res.redirect('/peminjaman');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Gagal menghapus peminjaman');
+    console.error('Gagal menghapus data peminjaman:', err);
+    res.status(500).send('Gagal menghapus data');
   }
 });
 

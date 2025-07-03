@@ -12,7 +12,8 @@ function isLoggedIn(req, res, next) {
 router.get('/', isLoggedIn, async (req, res) => {
   try {
     const barangs = await Barang.find();
-    res.render('barang/index', { barangs });
+    const role = req.user?.role || 'user';
+    res.render('barang/index', { barangs, role });
   } catch (err) {
     console.error(err);
     res.status(500).send('Gagal mengambil data barang');
@@ -23,10 +24,12 @@ router.get('/', isLoggedIn, async (req, res) => {
 router.get('/tambah', isLoggedIn, async (req, res) => {
   try {
     const barangs = await Barang.find();
+    const role = req.user?.role || 'user';
     res.render('barang/tambah', {
       barangs,
       error: null,
-      oldInput: {}
+      oldInput: {},
+      role
     });
   } catch (err) {
     console.error(err);
@@ -38,12 +41,14 @@ router.get('/tambah', isLoggedIn, async (req, res) => {
 router.post('/tambah', isLoggedIn, async (req, res) => {
   const { nama, jumlah, keterangan } = req.body;
   const oldInput = { nama, jumlah, keterangan };
+  const role = req.user?.role || 'user';
 
   if (!nama || !jumlah || isNaN(jumlah)) {
     return res.render('barang/tambah', {
       error: 'Nama dan jumlah valid wajib diisi',
       barangs: [],
-      oldInput
+      oldInput,
+      role
     });
   }
 
@@ -60,7 +65,8 @@ router.post('/tambah', isLoggedIn, async (req, res) => {
     res.render('barang/tambah', {
       error: 'Gagal menambah barang',
       barangs: [],
-      oldInput
+      oldInput,
+      role
     });
   }
 });
@@ -69,12 +75,16 @@ router.post('/tambah', isLoggedIn, async (req, res) => {
 router.get('/edit/:id', isLoggedIn, async (req, res) => {
   try {
     const barang = await Barang.findById(req.params.id);
-    const barangs = await Barang.find(); // ✅ Tambahkan ini
+    const barangs = await Barang.find();
+    const role = req.user?.role || 'user';
+
     if (!barang) return res.redirect('/barang');
+
     res.render('barang/edit', {
       barang,
       barangs,
-      error: null
+      error: null,
+      role
     });
   } catch (err) {
     console.error(err);
@@ -85,6 +95,7 @@ router.get('/edit/:id', isLoggedIn, async (req, res) => {
 // POST: Edit barang
 router.post('/edit/:id', isLoggedIn, async (req, res) => {
   const { nama, jumlah, keterangan } = req.body;
+  const role = req.user?.role || 'user';
 
   try {
     await Barang.findByIdAndUpdate(req.params.id, {
@@ -97,8 +108,9 @@ router.post('/edit/:id', isLoggedIn, async (req, res) => {
     console.error(err);
     res.render('barang/edit', {
       barang: { _id: req.params.id, nama, jumlah, keterangan },
-      barangs: [], // kirim kosong supaya aman
-      error: 'Gagal mengedit barang'
+      barangs: [],
+      error: 'Gagal mengedit barang',
+      role
     });
   }
 });

@@ -66,6 +66,14 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
+// Halaman Home sebelum Dashboard
+app.get('/home', isLoggedIn, (req, res) => {
+  res.render('home', {
+    username: req.user.username,
+    role: req.user.role
+  });
+});
+
 // Dashboard utama
 app.get('/dashboard', isLoggedIn, async (req, res) => {
   try {
