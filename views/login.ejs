@@ -41,15 +41,25 @@
       box-shadow: 0 0 0 0.2rem rgba(29, 53, 87, 0.25);
     }
 
-    .password-toggle {
+    .password-toggle-wrapper {
       position: relative;
     }
 
+    /* Membuat kotak input dan ikon berada dalam satu kontainer */
+    .password-toggle {
+      display: flex;
+      align-items: center;
+    }
+
+    .password-toggle input {
+      flex: 1;
+      padding-right: 40px; /* Memberi ruang untuk tombol eye */
+    }
+
+    /* Tombol mata berada di dalam kotak input */
     .password-toggle button {
       position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+      right: 10px; /* Menjaga jarak antara ikon dan tepi input */
       background: none;
       border: none;
       font-size: 18px;
@@ -115,10 +125,12 @@
       <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan username" required>
     </div>
 
-    <div class="mb-3 password-toggle">
+    <div class="mb-3 password-toggle-wrapper">
       <label for="password" class="form-label">Password</label>
-      <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password" required>
-      <button type="button" id="togglePassword"><i class="bi bi-eye"></i></button>
+      <div class="password-toggle">
+        <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password" required>
+        <button type="button" id="togglePassword"><i class="bi bi-eye"></i></button>
+      </div>
     </div>
 
     <div class="options mb-3">

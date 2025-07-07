@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Home - Fasilkom SI46</title>
   <link rel="stylesheet" href="/style.css">
+  <!-- Menambahkan link font Roboto dari Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Link untuk Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif; /* Menggunakan font Roboto */
       background: #f0f0f0;
     }
 
+    /* Style untuk Topbar */
     .topbar {
       background: #1d3557;
       color: white;
@@ -41,6 +46,7 @@
       font-weight: bold;
     }
 
+    /* Sidebar Style */
     .sidebar {
       position: fixed;
       top: 60px;
@@ -69,6 +75,7 @@
       background: #457b9d;
     }
 
+    /* Main Content Style */
     .main {
       margin-top: 60px;
       padding: 20px;
@@ -79,6 +86,7 @@
       margin-left: 250px;
     }
 
+    /* Hero Banner Images */
     .hero img {
       width: 100%;
       height: auto;
@@ -87,6 +95,7 @@
       display: block;
     }
 
+    /* Section Card Style */
     .section-card {
       background: white;
       padding: 20px;
@@ -110,6 +119,7 @@
       margin: 6px 0;
     }
 
+    /* Footer Style */
     .footer {
       background: #1d3557;
       color: white;
@@ -142,6 +152,47 @@
         flex-direction: column;
       }
     }
+
+    /* Teks di atas banner */
+    .welcome-message {
+      background-color: #1d3557;
+      color: white;
+      text-align: justify; /* Rata kiri-kanan */
+      padding: 30px 20px;
+      font-size: 18px;
+      font-weight: normal;
+      line-height: 1.6;
+    }
+
+    .welcome-message h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .welcome-message ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .welcome-message ul li {
+      margin: 10px 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
+
+    .welcome-message ul li i {
+      margin-right: 15px;
+      color: #ffcc00; /* Warna ikon */
+    }
+
+    .welcome-message h2 {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -150,9 +201,7 @@
 <div class="topbar">
   <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
   <img src="https://faperta.unilak.ac.id/wp-content/uploads/2018/02/LOGO-UNILAK-BARU-1024x990.png" alt="Logo Unilak">
-  <div class="title">Manajemen & Peminjaman Barang | Lab Fasilkom
-
-</div>
+  <div class="title">Manajemen & Peminjaman Barang | Lab Fasilkom</div>
 </div>
 
 <!-- SIDEBAR -->
@@ -170,6 +219,21 @@
 <!-- MAIN -->
 <div class="main" id="main">
 
+  <!-- Teks di atas banner -->
+  <div class="welcome-message">
+    <h1>Selamat Datang di Sistem Manajemen Peminjaman Barang Lab Fasilkom</h1>
+    <p>Dengan Sistem Manajemen Peminjaman Barang Lab Fasilkom, Anda dapat mengelola peminjaman barang laboratorium dengan lebih efisien dan mudah. Sistem ini dirancang untuk mempermudah Anda dalam meminjam, mengelola, dan mengembalikan barang sesuai dengan kebutuhan. Berikut adalah fitur yang dapat Anda manfaatkan:</p>
+    <ul>
+      <li><i class="fas fa-cogs"></i><strong>Peminjaman Barang:</strong> Cek status barang yang sedang Anda pinjam dan ajukan peminjaman baru.</li>
+      <li><i class="fas fa-search"></i><strong>Cari Barang:</strong> Temukan peralatan yang Anda butuhkan untuk menunjang kegiatan praktikum dan penelitian.</li>
+      <li><i class="fas fa-undo-alt"></i><strong>Pengembalian Barang:</strong> Lihat jadwal pengembalian barang dan pastikan Anda mengembalikannya tepat waktu.</li>
+      <li><i class="fas fa-history"></i><strong>Riwayat Peminjaman:</strong> Akses riwayat peminjaman Anda sebelumnya untuk mempermudah perencanaan ke depan.</li>
+    </ul>
+    <p><strong>Jika Anda membutuhkan bantuan atau informasi lebih lanjut, tim kami siap membantu Anda kapan saja.</strong></p>
+    <h2>Segera Kelola Peminjaman Anda dengan Sistem yang Lebih Teratur dan Tertata!</h2>
+  </div>
+
+  <!-- Banner Images -->
   <div class="hero">
     <img src="https://fasilkom.unilak.ac.id/asset/foto_banner/BANNER_WEB_FASILKOM_BARU_LARGE_SIZE-01.png" alt="Banner 1">
   </div>
@@ -177,6 +241,7 @@
     <img src="https://fasilkom.unilak.ac.id/asset/foto_banner/BANNER_WEB_FASILKOM_BARU_LARGE_SIZE-01-02.png" alt="Banner 2">
   </div>
 
+  <!-- Section Card -->
   <div class="section-card">
     <h2>FASILKOM Universitas Lancang Kuning</h2>
     <p>Dalam tujuannya untuk mencetak lulusan yang kompeten dalam bidang Teknologi Informasi, Fakultas Ilmu Komputer dirancang berdasarkan Kurikulum Nasional, tanpa mengabaikan standar internasional.</p>
@@ -190,6 +255,7 @@
     </ul>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     <div class="footer-columns">
       <div class="footer-column">
@@ -221,16 +287,14 @@
         - Duck Studi Club</p>
       </div>
     </div>
-    <p>© 2025. All Rights Reserved. Design by Marcelino Kevin D.E Mahasiswa Fakultas Ilmu Komputer Universitas Lancang Kuning</p>
   </div>
-
 </div>
 
 <script>
-function toggleSidebar() {
-  document.getElementById("sidebar").classList.toggle("show");
-  document.getElementById("main").classList.toggle("shift");
-}
+  function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("show");
+    document.getElementById("main").classList.toggle("shift");
+  }
 </script>
 
 </body>

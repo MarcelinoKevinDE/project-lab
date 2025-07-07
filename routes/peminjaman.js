@@ -104,6 +104,29 @@ router.get('/edit/:id', isAdmin, async (req, res) => {
   }
 });
 
+// POST: Edit peminjaman
+router.post('/edit/:id', isAdmin, async (req, res) => {
+  const { nama, nim, tanggalPinjam, tanggalKembali, barangDipinjam } = req.body;
+
+  try {
+    const peminjaman = await Peminjaman.findById(req.params.id);
+    if (!peminjaman) return res.status(404).send('Peminjaman tidak ditemukan');
+
+    // Update peminjaman
+    peminjaman.nama = nama.trim();
+    peminjaman.nim = nim.trim();
+    peminjaman.tanggalPinjam = tanggalPinjam ? new Date(tanggalPinjam) : new Date();
+    peminjaman.tanggalKembali = tanggalKembali ? new Date(tanggalKembali) : null;
+    peminjaman.barangDipinjam = barangDipinjam;
+
+    await peminjaman.save();
+    res.redirect('/peminjaman');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Gagal mengupdate peminjaman');
+  }
+});
+
 // POST: Kembalikan barang
 router.post('/kembalikan/:id', isAdmin, async (req, res) => {
   try {
